@@ -48,7 +48,7 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// FETCH (network-first, fallback cache)
+// FETCH (network-first, safe cache)
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
@@ -60,12 +60,24 @@ self.addEventListener("fetch", event => {
   event.respondWith(
     fetch(event.request)
       .then(res => {
+        // ❌ jangan cache response error / 404
+        if (!res || res.status !== 200) {
+          return res;
+        }
+
         const resClone = res.clone();
         caches.open(CACHE_NAME).then(cache => {
           cache.put(event.request, resClone);
         });
+
         return res;
       })
-      .catch(() => caches.match(event.request))
+      .catch(() => {
+        // fallback SPA root untuk navigasi / offline
+        if (event.request.mode === "navigate") {
+          return caches.match("./index.html");
+        }
+        return caches.match(event.request);
+      })
   );
 });

@@ -92,28 +92,71 @@ window.addEventListener("load", () => {
 });
 
 /* =========================
-   PWA INSTALL HANDLER
+   PWA INSTALL HANDLER (FINAL)
    ========================= */
+
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
+/* =========================
+   STATE CHECK
+   ========================= */
+
+// true jika sudah standalone
+const isStandalone =
+  window.matchMedia("(display-mode: standalone)").matches ||
+  window.navigator.standalone === true;
+
+// true jika pernah install (persisted)
+const alreadyInstalled =
+  localStorage.getItem("pwaInstalled") === "true";
+
+/* hide by default if not needed */
+if (installBtn && (isStandalone || alreadyInstalled)) {
+  installBtn.classList.add("is-hidden");
+}
+
+/* =========================
+   CAPTURE INSTALL PROMPT
+   ========================= */
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  if (installBtn) {
+  // hanya tampil jika memang relevan
+  if (installBtn && !isStandalone && !alreadyInstalled) {
     installBtn.classList.remove("is-hidden");
   }
 });
 
+/* =========================
+   INSTALL BUTTON CLICK
+   ========================= */
 if (installBtn) {
   installBtn.addEventListener("click", async () => {
     if (!deferredPrompt) return;
 
     deferredPrompt.prompt();
-    await deferredPrompt.userChoice;
+    const result = await deferredPrompt.userChoice;
+
+    // jika user accept → simpan state
+    if (result.outcome === "accepted") {
+      localStorage.setItem("pwaInstalled", "true");
+    }
 
     deferredPrompt = null;
     installBtn.classList.add("is-hidden");
   });
 }
+
+/* =========================
+   AFTER INSTALLED
+   ========================= */
+window.addEventListener("appinstalled", () => {
+  localStorage.setItem("pwaInstalled", "true");
+  deferredPrompt = null;
+
+  if (installBtn) {
+    installBtn.classList.add("is-hidden");
+  }
+});
