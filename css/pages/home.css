@@ -1,0 +1,293 @@
+/* =========================
+   HOME – PREMIUM CALM v1.1
+   THEME-AWARE FINAL (LOCKED)
+   ========================= */
+
+/* =========================
+   PAGE
+   ========================= */
+.home-page {
+  padding-top: 12px;
+  padding-bottom: 120px; /* ruang FAB + bottom nav */
+}
+
+/* =========================
+   HEADER
+   ========================= */
+.home-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 12px;
+
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.04),
+    transparent
+  );
+}
+
+.home-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  color: var(--text);
+}
+
+.menu-btn,
+.theme-btn {
+  border: none;
+  background: var(--drawer-bg);
+  border-radius: 12px;
+  padding: 8px 10px;
+
+  box-shadow: 0 3px 10px var(--shadow-soft); /* lebih soft */
+  cursor: pointer;
+  color: var(--text);
+
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+
+.menu-btn:active,
+.theme-btn:active {
+  transform: scale(.96);
+}
+
+/* =========================
+   RESUME / LAST ACTIVITY
+   ========================= */
+.resume {
+  background: var(--drawer-bg);
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 26px;
+
+  box-shadow: 0 6px 20px var(--shadow-soft);
+}
+
+.resume-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.resume-title {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.resume-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  padding: 4px 10px;
+  border-radius: 999px;
+
+  color: var(--link);
+  background: rgba(0,0,0,.035);
+
+  cursor: pointer;
+  white-space: nowrap;
+
+  transition:
+    background .15s ease,
+    transform .15s ease;
+}
+
+.resume-action:hover {
+  background: rgba(0,0,0,.07);
+  text-decoration: none;
+}
+
+.resume-action:active {
+  transform: scale(.96);
+}
+
+.resume-main {
+  font-size: 16px;
+  font-weight: 600;
+  margin-top: 4px;
+  color: var(--text);
+}
+
+.resume-meta {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* =========================
+   STATUS SUMMARY
+   ========================= */
+.status-summary {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-bottom: 32px;
+}
+
+/* jika hanya satu card */
+.status-summary.single {
+  grid-template-columns: 1fr;
+}
+
+.stat {
+  background: var(--drawer-bg);
+  border-radius: 18px;
+  padding: 18px 14px;
+  text-align: center;
+
+  border: 1px solid var(--border-soft);
+  box-shadow: 0 4px 14px var(--shadow-soft);
+}
+
+.stat strong {
+  font-size: 20px;
+  font-weight: 600;
+  display: block;
+  color: var(--text);
+}
+
+.stat span {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* =========================
+   TAG SUMMARY
+   ========================= */
+.tag-summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+  margin-bottom: 28px;
+  margin-top: 16px;
+  clear: both;
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 12px;
+  border-radius: 999px;
+
+  background: var(--drawer-bg);
+  border: 1px solid var(--border-soft);
+
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--text);
+
+  box-shadow: 0 2px 8px var(--shadow-soft);
+
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+/* =========================
+   EMPTY STATE
+   ========================= */
+.empty-state {
+  text-align: center;
+  font-size: 14px;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+/* =========================
+   UTIL
+   ========================= */
+.is-hidden {
+  display: none !important;
+}
+
+/* =========================
+   LFG FAB
+   ========================= */
+.lfg-fab {
+  position: fixed;
+  right: 16px;
+  bottom: 76px;
+
+  padding: 10px 18px;
+  border-radius: 999px;
+
+  background: var(--press-bg);
+  color: var(--link);
+
+  font-size: 14px;
+  font-weight: 600;
+
+  box-shadow:
+    0 8px 20px var(--shadow-soft),
+    inset 0 0 0 1px var(--border-soft);
+
+  cursor: pointer;
+  z-index: 9999;
+}
+/* =========================
+   ADD EDITOR FAB
+   ========================= */
+.add-fab {
+  position: fixed;
+  left: 16px;
+  bottom: 76px;
+
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+
+  background: var(--press-bg);
+  color: var(--text);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 26px;
+  font-weight: 600;
+  line-height: 1;
+
+  box-shadow:
+    0 8px 20px var(--shadow-soft),
+    inset 0 0 0 1px var(--border-soft);
+
+  cursor: pointer;
+  user-select: none;
+  z-index: 9999;
+}
+
+/* tap feedback */
+.add-fab:active {
+  transform: scale(0.95);
+}
+
+/* =========================
+   STATUS CARD – COMPACT POLISH
+   ========================= */
+
+.stat {
+  padding: 14px 12px;               /* dari 18px → lebih kecil */
+  border-radius: 16px;              /* lebih compact */
+  box-shadow: 0 3px 10px var(--shadow-soft);
+}
+
+/* angka */
+.stat strong {
+  font-size: 18px;                  /* dari 20px */
+}
+
+/* label */
+.stat span {
+  font-size: 12px;                  /* lebih tenang */
+  letter-spacing: .2px;
+}

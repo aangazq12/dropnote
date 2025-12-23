@@ -1,0 +1,58 @@
+
+<section class="editor-page page">
+
+  <!-- HEADER -->
+  <header class="editor-header header">
+    <h1>Note</h1>
+    <span class="header-spacer"></span>
+  </header>
+
+  <!-- BODY -->
+  <div class="editor-body">
+
+    <label>
+      Title
+      <input
+        id="titleInput"
+        placeholder="Airdrop title"
+      />
+    </label>
+
+    <label>
+      Link
+      <input
+        id="linkInput"
+        placeholder="https://..."
+      />
+    </label>
+
+    <label>
+      Tags
+      <input
+        id="tagsInput"
+        placeholder="airdrop, testnet, zk"
+      />
+    </label>
+
+    <!-- EDITOR CARD -->
+    <div class="editor-card" id="editorCard">
+      <textarea
+        id="contentInput"
+        rows="1"
+        placeholder=""
+      ></textarea>
+
+      <div class="editor-hint" id="editorHint">
+        <strong>Mulai tulis catatan di sini…</strong><br>
+        Wallet, @username, atau uid akan dikenali otomatis.
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SAVE BAR -->
+  <div class="save-bar">
+    <button id="saveBtn" type="button">Save</button>
+  </div>
+
+</section>

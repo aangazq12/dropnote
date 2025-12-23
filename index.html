@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DropNote</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0f172a">
+  <!-- CORE -->
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+
+  <!-- COMPONENTS -->
+  <link rel="stylesheet" href="css/components/drawer.css">
+  <link rel="stylesheet" href="css/components/toast.css">
+
+  <!-- THEME (LOCKED) -->
+  <link rel="stylesheet" href="css/themes/dark.css">
+</head>
+
+<body>
+
+  <main id="app"></main>
+
+  <nav class="bottom-nav">
+    <button onclick="loadPage('home')">🏠</button>
+    <button onclick="loadPage('notes')">🗒️</button>
+  </nav>
+
+  <div id="toastRoot" class="toast-root"></div>
+
+  <!-- CORE JS -->
+  <script src="js/core/time.js"></script>
+  <script src="js/core/utils.js"></script>
+  <script src="js/core/store.js"></script>
+  <script src="js/core/theme.js"></script>
+  <script src="js/core/toast.js"></script>
+  <script src="js/app.js"></script>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker.register("./sw.js");
+    });
+  }
+</script>
+</body>
+</html>

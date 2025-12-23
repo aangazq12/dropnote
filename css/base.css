@@ -1,0 +1,54 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+
+a {
+  color: var(--link);
+  text-decoration: none;
+}
+
+.hidden,
+.is-hidden {
+  display: none !important;
+}
+
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  margin-top: 40px;
+}
+
+.muted {
+  opacity: .6;
+}
+
+/* SPA RENDER GUARD */
+#app.loading {
+  opacity: 0;
+}
+
+#app.ready {
+  opacity: 1;
+  transition: opacity .12s ease;
+}
+
+#app {
+  will-change: opacity;
+}
+
+.bottom-nav.hide-on-keyboard {
+  transform: translateY(100%);
+  transition: transform .2s ease;
+}
