@@ -1,0 +1,84 @@
+/* =========================  
+   APP ROOT  
+   ========================= */  
+#app {  
+  padding: 16px;  
+  padding-bottom: 80px; /* space for bottom nav */  
+}  
+  
+/* =========================  
+   PAGE WRAPPER  
+   ========================= */  
+.page {  
+  min-height: 100%;  
+}  
+  
+/* =========================  
+   GENERIC HEADER  
+   ========================= */  
+.header {  
+  display: flex;  
+  align-items: center;  
+  justify-content: space-between;  
+  gap: 12px;  
+}  
+  
+/* =========================  
+   BOTTOM NAVIGATION  
+   ========================= */  
+.bottom-nav {  
+  position: fixed;  
+  bottom: 0;  
+  left: 0;  
+  right: 0;  
+
+  height: 56px;  
+  display: flex;  
+  z-index: 100;  
+
+  background: var(--nav-bg);  
+  border-top: 1px solid var(--border-soft);  
+
+  backdrop-filter: blur(6px);  
+  -webkit-backdrop-filter: blur(6px);  
+}  
+
+.bottom-nav button {  
+  flex: 1;  
+  border: none;  
+  background: none;  
+
+  font-size: 14px;  
+  color: var(--nav-text);  
+}  
+
+.bottom-nav button.active {  
+  color: var(--nav-text-active);  
+  font-weight: 600;  
+}
+/* =========================  
+   HEADER SPACER (RIGHT SLOT)  
+   ========================= */  
+.header-spacer {  
+  width: 24px;  
+}  
+  
+/* =========================  
+   SAVE BAR (EDITOR)  
+   ========================= */  
+.save-bar {  
+  position: fixed;  
+  bottom: 64px; /* above bottom nav */  
+  left: 16px;  
+  right: 16px;  
+  z-index: 90;  
+}  
+  
+/* =========================  
+   DETAIL ACTIONS  
+   ========================= */  
+.detail-actions {  
+  display: flex;  
+  gap: 8px;  
+  margin-top: 16px;  
+}

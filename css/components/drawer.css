@@ -1,0 +1,97 @@
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+  z-index: 90;
+}
+
+.drawer-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* =========================
+   DRAWER
+   ========================= */
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  width: 78%;
+  max-width: 300px;
+  height: 100%;
+
+  background: var(--drawer-bg);
+  box-shadow: 6px 0 24px var(--shadow-soft);
+
+  transform: translateX(-100%);
+  transition: transform .25s ease;
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.drawer.show {
+  transform: translateX(0);
+}
+
+/* =========================
+   DRAWER HEADER
+   ========================= */
+.drawer-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.drawer-version {
+  font-size: 12px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
+/* =========================
+   DRAWER MENU
+   ========================= */
+.drawer-menu {
+  padding: 12px;
+}
+
+.drawer-item {
+  width: 100%;
+  text-align: left;
+
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: transparent;
+
+  font-size: 15px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-item small {
+  font-size: 11px;
+  opacity: 0.5;
+}
+
+.drawer-item:active {
+  background: var(--press-bg);
+}
+
+.drawer-item.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}

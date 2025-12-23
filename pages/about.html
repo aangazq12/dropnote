@@ -1,0 +1,118 @@
+
+<section class="about-page page">
+
+  <!-- HEADER -->
+  <header class="about-header header">
+    <button class="menu-btn icon">☰</button>
+    <h1>About</h1>
+    <span class="header-spacer"></span>
+  </header>
+
+  <!-- ACCORDION -->
+  <section class="about-accordion">
+
+    <!-- OVERVIEW (OPEN BY DEFAULT) -->
+    <details open>
+      <summary>Overview</summary>
+      <div class="accordion-body">
+        <p><strong>DropNote v1.0</strong></p>
+        <p>
+          Local-first note system<br>
+          with structured labels and LFG mode.
+        </p>
+      </div>
+    </details>
+
+    <!-- EDITOR -->
+    <details>
+      <summary>Editor: Save behavior</summary>
+      <div class="accordion-body">
+        <ul>
+          <li>Judul wajib diisi</li>
+          <li>Tag dirapikan otomatis</li>
+          <li>Konten disimpan apa adanya</li>
+          <li>Label duplikat digabung</li>
+        </ul>
+
+        <p><strong>Editor tidak akan:</strong></p>
+        <ul>
+          <li>Auto format</li>
+          <li>Auto translate</li>
+          <li>Auto correct</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- TAGS -->
+    <details>
+      <summary>Tags: Home visibility</summary>
+      <div class="accordion-body">
+        <pre><code>tag1, tag2
+tag3 / tag4
+tag5</code></pre>
+
+        <ul>
+          <li>Tidak case-sensitive</li>
+          <li>Simbol dibersihkan</li>
+          <li>Spasi dirapikan</li>
+        </ul>
+
+        <p class="muted">
+          Home hanya menampilkan tag penting (by design).
+        </p>
+      </div>
+    </details>
+
+    <!-- LFG -->
+    <details>
+      <summary>LFG: Wallet & label rules</summary>
+      <div class="accordion-body">
+        <pre><code>wallet 0xabc...
+w 0x123...
+address 0x999...</code></pre>
+
+        <ul>
+          <li>Semua keyword dianggap wallet</li>
+          <li>Hanya satu wallet ditampilkan</li>
+          <li>Duplikat diabaikan</li>
+        </ul>
+
+        <pre><code>wallet, w, address, addr
+→ wallet</code></pre>
+      </div>
+    </details>
+
+    <!-- SETTINGS -->
+    <details>
+      <summary>Settings: What they affect</summary>
+      <div class="accordion-body">
+        <p><strong>Affects:</strong></p>
+        <ul>
+          <li>Appearance</li>
+          <li>Behavior</li>
+          <li>LFG defaults</li>
+        </ul>
+
+        <p><strong>Does not affect:</strong></p>
+        <ul>
+          <li>Existing notes</li>
+          <li>Stored content</li>
+        </ul>
+      </div>
+    </details>
+
+    <!-- DATA -->
+    <details>
+      <summary>Data & privacy</summary>
+      <div class="accordion-body">
+        <ul>
+          <li>Semua data disimpan lokal</li>
+          <li>Tidak perlu akun</li>
+          <li>Tidak ada server / cloud</li>
+          <li>Backup manual via export</li>
+        </ul>
+      </div>
+    </details>
+
+  </section>
+</section>

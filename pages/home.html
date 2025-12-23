@@ -1,0 +1,63 @@
+
+<section class="home-page page">
+
+  <!-- HEADER -->
+  <header class="home-header header">
+    <button class="menu-btn icon">☰</button>
+    <h1>DropNote</h1>
+    <button class="theme-btn icon">☀️ / 🌙</button>
+  </header>
+
+  <!-- DRAWER OVERLAY -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <!-- DRAWER -->
+  <aside class="drawer" id="homeDrawer">
+    <div class="drawer-header">
+      <div class="drawer-title">DropNote</div>
+      <div class="drawer-version">v1.0</div>
+    </div>
+
+    <nav class="drawer-menu">
+      <button class="drawer-item" onclick="loadPage('settings')">⚙ Settings</button>
+      <button class="drawer-item" onclick="loadPage('about')">ℹ About</button>
+    </nav>
+  </aside>
+
+  <!-- LAST ACTIVITY -->
+  <section class="resume is-hidden" id="lastActivity">
+    <div class="resume-header">
+      <div class="resume-title">Terakhir dikerjakan</div>
+      <span class="resume-action" id="resumeContinue">Lanjutkan →</span>
+    </div>
+    <div class="resume-main" id="lastTitle"></div>
+    <div class="resume-meta" id="lastMeta"></div>
+  </section>
+
+  <!-- STATUS SUMMARY -->
+  <section class="status-summary" id="statusSummary">
+    <div class="stat is-hidden" id="overdueBox">
+      <strong id="overdueCount">0</strong>
+      <span>Overdue</span>
+    </div>
+    <div class="stat is-hidden" id="draftBox">
+      <strong id="draftCount">0</strong>
+      <span>Draft</span>
+    </div>
+  </section>
+
+  <!-- TAG SUMMARY -->
+  <section class="tag-summary is-hidden" id="tagSummary"></section>
+
+  <!-- EMPTY STATE -->
+  <section class="empty-state is-hidden" id="emptyState">
+    <p>Belum ada catatan</p>
+  </section>
+
+</section>
+
+<!-- ADD NOTE ACTION -->
+<div class="add-fab" onclick="loadPage('editor')">＋</div>
+
+<!-- LFG GLOBAL ACTION -->
+<div class="lfg-fab" onclick="loadPage('lfg')">LFG 🔥</div>

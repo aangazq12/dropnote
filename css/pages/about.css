@@ -1,0 +1,40 @@
+.about-page {
+  padding-bottom: 80px;
+}
+
+.about-accordion details {
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  padding: 8px 0;
+}
+
+.about-accordion summary {
+  cursor: pointer;
+  font-weight: 500;
+  list-style: none;
+}
+
+.about-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.accordion-body {
+  padding: 10px 0 16px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.accordion-body ul {
+  padding-left: 18px;
+}
+
+.accordion-body pre {
+  background: rgba(0,0,0,0.05);
+  padding: 10px;
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.muted {
+  opacity: 0.7;
+  font-size: 13px;
+}

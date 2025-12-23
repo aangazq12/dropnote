@@ -1,0 +1,208 @@
+/* =================================================
+   DROPNOTE — DARK MODE
+   Eye Comfort / Premium Calm
+   FINAL – LOCKED (v1.1)
+   ================================================= */
+
+[data-theme="dark"] {
+
+  /* =========================
+     CORE BACKGROUND
+     ========================= */
+  --bg: #0f172a;                /* deep navy, not pure black */
+
+  /* =========================
+     SURFACES
+     ========================= */
+  --drawer-bg: #0b1224;         /* cards, drawer, surfaces */
+  --press-bg: rgba(255,255,255,.06); /* FAB, pressed states */
+
+  /* =========================
+     TEXT
+     ========================= */
+  --text: #e5e7eb;              /* primary text */
+  --text-muted: #94a3b8;        /* secondary text */
+  --link: #7aa2ff;              /* soft indigo (non-neon) */
+
+  /* =========================
+     BORDERS & SHADOWS
+     ========================= */
+  --border-soft: rgba(255,255,255,.08);
+  --shadow-soft: rgba(0,0,0,.6);
+
+  /* =========================
+     OVERLAY
+     ========================= */
+  --overlay: rgba(8,12,28,.55); /* navy overlay (not pure black) */
+
+  /* =========================
+     BOTTOM NAV
+     ========================= */
+  --nav-bg: linear-gradient(
+    to top,
+    rgba(2,6,23,.95),
+    rgba(15,23,42,.85)
+  );
+  --nav-text: #9ca3af;
+  --nav-text-active: #e5e7eb;
+}
+
+/* =================================================
+   HEADER – DARK MODE POLISH
+   ================================================= */
+
+[data-theme="dark"] .home-header {
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    rgba(15,23,42,.65),
+    rgba(15,23,42,.35)
+  );
+}
+
+[data-theme="dark"] .home-header::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -12px;
+  height: 18px;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,.35),
+    transparent
+  );
+}
+
+[data-theme="dark"] .home-header h1 {
+  color: #f1f5f9;
+  letter-spacing: .3px;
+}
+
+/* =================================================
+   ICON BUTTONS (MENU / THEME)
+   ================================================= */
+
+[data-theme="dark"] .menu-btn,
+[data-theme="dark"] .theme-btn {
+  background: rgba(255,255,255,.06);
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.55),
+    inset 0 0 0 1px var(--border-soft);
+}
+
+[data-theme="dark"] .menu-btn:active,
+[data-theme="dark"] .theme-btn:active {
+  transform: scale(.95);
+}
+
+/* =================================================
+   DRAWER POLISH
+   ================================================= */
+
+[data-theme="dark"] .drawer-header {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,.02),
+    transparent
+  );
+}
+
+/* =================================================
+   CARD & CONTENT CONSISTENCY
+   ================================================= */
+
+[data-theme="dark"] .resume,
+[data-theme="dark"] .stat,
+[data-theme="dark"] .tag-pill {
+  background: var(--drawer-bg);
+}
+
+[data-theme="dark"] .resume-main {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .resume-action {
+  background: rgba(255,255,255,.06);
+}
+
+/* =================================================
+   FAB & GLOBAL ACTIONS
+   ================================================= */
+
+[data-theme="dark"] .add-fab,
+[data-theme="dark"] .lfg-fab {
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.6),
+    inset 0 0 0 1px var(--border-soft);
+}
+
+/* =================================================
+   DARK MODE – TEXT FIX (REQUIRED)
+   ================================================= */
+
+[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+[data-theme="dark"] .drawer,
+[data-theme="dark"] .drawer-title,
+[data-theme="dark"] .drawer-item {
+  color: var(--text);
+}
+
+[data-theme="dark"] .drawer-version,
+[data-theme="dark"] .drawer-item small {
+  color: var(--text-muted);
+}
+
+/* =================================================
+   LFG PAGE – DARK MODE POLISH
+   ================================================= */
+
+/* container / card utama */
+[data-theme="dark"] .lfg-card,
+[data-theme="dark"] .lfg-panel,
+[data-theme="dark"] .lfg-item {
+  background: var(--drawer-bg);
+  color: var(--text);
+  box-shadow:
+    0 10px 28px rgba(0,0,0,.55),
+    inset 0 0 0 1px var(--border-soft);
+}
+
+/* header LFG (🔥 LFG + tag) */
+[data-theme="dark"] .lfg-header {
+  background: rgba(255,255,255,.03);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* label kiri (EVM, SOL, twitter, dll) */
+[data-theme="dark"] .lfg-label {
+  color: var(--text-muted);
+}
+
+/* value kanan (address, username, dll) */
+[data-theme="dark"] .lfg-value {
+  color: var(--text);
+}
+
+/* row / field */
+[data-theme="dark"] .lfg-row,
+[data-theme="dark"] .lfg-field {
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border-soft);
+}
+
+/* note / hint kecil */
+[data-theme="dark"] .lfg-note,
+[data-theme="dark"] .lfg-hint {
+  color: var(--text-muted);
+}
+
+/* tap feedback */
+[data-theme="dark"] .lfg-row:active {
+  background: rgba(255,255,255,.06);
+}

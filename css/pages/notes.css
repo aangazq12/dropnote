@@ -1,0 +1,134 @@
+/* =========================
+   NOTES PAGE – DROPNOTE STYLE
+   ========================= */
+
+.notes-page {
+  padding-bottom: 16px;
+}
+
+/* =========================
+   HEADER
+   ========================= */
+.notes-page .notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+/* =========================
+   SEARCH
+   ========================= */
+.notes-page .notes-search {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid var(--border-soft);
+  background: var(--bg);
+  color: var(--text);
+  font-size: 14px;
+  margin: 12px 0 16px;
+}
+
+/* =========================
+   FILTER
+   ========================= */
+.notes-page .status-filter {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.notes-page .status-filter button {
+  flex: 1;
+  padding: 8px 0;
+  border-radius: 999px;
+  border: 1px solid var(--border-soft);
+  background: var(--drawer-bg);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.notes-page .status-filter button.active {
+  background: var(--text);
+  color: var(--bg);
+  border-color: var(--text);
+}
+
+/* =========================
+   NOTE CARD
+   ========================= */
+.notes-page .note-card {
+  background: var(--drawer-bg);
+  border-radius: 16px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+
+  box-shadow:
+    0 1px 0 rgba(0,0,0,.03),
+    0 8px 18px var(--shadow-soft);
+
+  border-left: 3px solid transparent;
+  transition: transform .12s ease;
+}
+
+.notes-page .note-card:active {
+  transform: scale(.98);
+}
+
+/* =========================
+   NOTE HEADER
+   ========================= */
+.notes-page .note-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notes-page .note-head h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* =========================
+   META
+   ========================= */
+.notes-page .note-wallet {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--link);
+  word-break: break-all;
+}
+
+.notes-page .note-tags {
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.notes-page .note-meta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+/* =========================
+   STATES (SOFT)
+   ========================= */
+.notes-page .note-draft {
+  border-left-color: #cbd5e1;
+}
+
+.notes-page .note-active {
+  border-left-color: #93c5fd;
+}
+
+.notes-page .note-done {
+  border-left-color: #86efac;
+  opacity: .6;
+}
+
+.notes-page .note-overdue {
+  border-left-color: #fca5a5;
+}
