@@ -7,12 +7,9 @@ const CORE_ASSETS = [
 
   // CSS
   "./css/base.css",
-  "./css/variables.css",
   "./css/layout.css",
   "./css/themes/dark.css",
   "./css/components/drawer.css",
-  "./css/components/card.css",
-  "./css/components/button.css",
   "./css/components/toast.css",
 
   // JS core
