@@ -82,3 +82,31 @@
   gap: 8px;  
   margin-top: 16px;  
 }
+
+/* =========================
+   PWA INSTALL BUTTON
+   ========================= */
+.install-btn {
+  position: fixed;
+  right: 16px;
+  bottom: 90px; /* di atas bottom-nav */
+
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: none;
+
+  background: var(--drawer-bg);
+  color: var(--text);
+
+  font-size: 14px;
+  font-weight: 500;
+
+  box-shadow: 0 8px 24px var(--shadow-soft);
+  z-index: 120;
+
+  cursor: pointer;
+}
+
+.install-btn:active {
+  transform: scale(.96);
+}
