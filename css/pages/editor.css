@@ -145,3 +145,31 @@
   font-size: 15px;
   font-weight: 500;
 }
+
+/* =================================================
+   EDITOR — DARK MODE FIELD POLISH
+   ================================================= */
+
+[data-theme="dark"] .editor-body input,
+[data-theme="dark"] .editor-body textarea {
+  background: rgba(255,255,255,0.035);
+  border: 1px solid rgba(255,255,255,0.10);
+  color: var(--text);
+}
+
+[data-theme="dark"] .editor-body input::placeholder,
+[data-theme="dark"] .editor-body textarea::placeholder {
+  color: rgba(255,255,255,0.35);
+}
+
+[data-theme="dark"] .editor-body input:focus,
+[data-theme="dark"] .editor-body textarea:focus {
+  outline: none;
+  border-color: rgba(122,162,255,0.35);
+  background: rgba(255,255,255,0.045);
+  box-shadow: 0 0 0 2px rgba(122,162,255,0.18);
+}
+
+[data-theme="dark"] .editor-card {
+  background: rgba(255,255,255,0.03);
+}
