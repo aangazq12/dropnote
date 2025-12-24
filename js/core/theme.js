@@ -1,36 +1,95 @@
 /* =========================
-   DAYLIGHT LOGIC v1.1 (SPA SAFE)
+   DAYLIGHT LOGIC v1.3 (FINAL)
+   SOURCE OF TRUTH: SETTINGS 🔒
    ========================= */
+
 (function () {
-  const STORAGE_KEY = "dropnote:theme";
   const root = document.documentElement;
 
-  function setTheme(theme) {
-    root.setAttribute("data-theme", theme);
-    localStorage.setItem(STORAGE_KEY, theme);
-    updateButtons(theme);
+  /* =========================
+     APPLY THEME
+     ========================= */
+  function applyTheme(mode) {
+    if (mode === "system") {
+      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      root.dataset.theme = prefersDark ? "dark" : "light";
+    } else {
+      root.dataset.theme = mode;
+    }
+
+    updateButtons(root.dataset.theme);
   }
 
-  function toggleTheme() {
-    const current = root.getAttribute("data-theme") || "light";
-    setTheme(current === "dark" ? "light" : "dark");
+  /* =========================
+     APPLY FONT SIZE
+     ========================= */
+  function applyFontSize(size) {
+    root.dataset.font = size || "default";
   }
 
+  /* =========================
+     BUTTON STATE
+     ========================= */
   function updateButtons(theme) {
     document.querySelectorAll(".theme-btn").forEach(btn => {
       btn.textContent = theme === "dark" ? "🌙" : "☀️";
     });
   }
 
-  // INIT THEME ONCE
-  const saved = localStorage.getItem(STORAGE_KEY) || "light";
-  setTheme(saved);
+  /* =========================
+     TOGGLE HANDLER
+     ========================= */
+  function toggleTheme() {
+    const settings = window.getSettings?.();
+    if (!settings) return;
 
-  // GLOBAL CLICK DELEGATION (SPA SAFE)
+    const current = settings.appearance.theme;
+    const next =
+      current === "dark" ? "light" :
+      current === "light" ? "dark" :
+      "dark"; // system → dark
+
+    updateSettings({
+      appearance: {
+        ...settings.appearance,
+        theme: next
+      }
+    });
+  }
+
+  /* =========================
+     INIT / APPLY ALL
+     ========================= */
+  function init() {
+    const settings = window.getSettings?.();
+    if (!settings) return;
+
+    applyTheme(settings.appearance.theme);
+    applyFontSize(settings.appearance.fontSize);
+  }
+
+  /* =========================
+     EVENTS
+     ========================= */
   document.addEventListener("click", e => {
     const btn = e.target.closest(".theme-btn");
     if (!btn) return;
     toggleTheme();
   });
 
+  window.addEventListener("settings:updated", init);
+
+  /* =========================
+     SYSTEM THEME WATCHER
+     ========================= */
+  const media = window.matchMedia("(prefers-color-scheme: dark)");
+  media.addEventListener("change", () => {
+    const settings = window.getSettings?.();
+    if (!settings) return;
+    if (settings.appearance.theme === "system") {
+      applyTheme("system");
+    }
+  });
+
+  init();
 })();

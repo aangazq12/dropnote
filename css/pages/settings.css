@@ -1,34 +1,216 @@
+/* ===============================
+   SETTINGS — PREMIUM CALM
+   DropNote v1.1.x (LOCK SAFE)
+   =============================== */
+
 .settings-page {
   padding-bottom: 80px;
 }
 
-.settings-content {
-  padding: 16px;
-}
-
-.settings-section {
+/* ===============================
+   HEADER
+   =============================== */
+.settings-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   margin-bottom: 24px;
 }
 
+.settings-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ===============================
+   SECTION
+   =============================== */
+.settings-section {
+  background: var(--drawer-bg, #fff);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
+}
+
 .settings-section h2 {
+  margin: 0 0 14px;
   font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ===============================
+   SETTING ITEM
+   =============================== */
+.setting-item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.setting-item:last-child {
+  margin-bottom: 0;
+}
+
+.setting-item label {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ===============================
+   INPUT / SELECT
+   =============================== */
+.setting-item select,
+.setting-item input[type="text"] {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--bg);
+  color: var(--text);
+}
+
+[data-theme="dark"] .setting-item select,
+[data-theme="dark"] .setting-item input[type="text"] {
+  border-color: rgba(255,255,255,0.12);
+}
+
+/* ===============================
+   CHECKBOX (CALM)
+   =============================== */
+.setting-item.checkbox {
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.setting-item.checkbox label {
+  font-size: 14px;
+  color: var(--text);
+}
+
+.setting-item.checkbox input {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--link);
+}
+
+/* ===============================
+   BUTTONS
+   =============================== */
+.settings-section button {
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--bg);
+  color: var(--text);
+}
+
+.settings-section button:active {
+  background: var(--press-bg);
+}
+
+/* Danger */
+.setting-item.danger button {
+  color: #b91c1c;
+  border-color: rgba(185,28,28,0.35);
+}
+
+/* ===============================
+   FILE INPUT
+   =============================== */
+.setting-item input[type="file"] {
+  font-size: 13px;
+}
+
+/* ===============================
+   INFO / NOTE
+   =============================== */
+.settings-note {
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.settings-info {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-info li {
+  font-size: 13px;
+  color: var(--text-muted);
   margin-bottom: 6px;
 }
 
-.settings-section .desc {
-  font-size: 14px;
-  color: var(--text-muted);
-  line-height: 1.6;
+.settings-info strong {
+  color: var(--text);
+  font-weight: 500;
 }
 
-.settings-section ul {
-  padding-left: 18px;
-  font-size: 14px;
-  line-height: 1.6;
+/* ===============================
+   SCROLL FIX — SETTINGS PAGE
+   =============================== */
+
+.settings-page {
+  min-height: 100vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
-.settings-note {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 32px;
+/* ===============================
+   BACK BUTTON — PREMIUM CALM
+   =============================== */
+
+.settings-header .menu-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.6);
+}
+
+[data-theme="dark"] .settings-header .menu-btn {
+  border-color: rgba(255,255,255,0.12);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+
+.settings-header .menu-btn:active {
+  background: var(--press-bg);
+  transform: translateY(1px);
+}
+
+/* ===============================
+   SCROLL FIX — REAL FIX (DROP NOTE)
+   =============================== */
+
+.settings-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-header {
+  flex-shrink: 0;
+}
+
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 120px; /* aman dari bottom nav */
 }

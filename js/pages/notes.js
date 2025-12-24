@@ -1,6 +1,7 @@
 /* ===============================
    NOTES PAGE (FINAL)
    CORE LIST & FILTER 🔒
+   + STEP E: NOTES BEHAVIOR
    =============================== */
 
 (() => {
@@ -21,6 +22,8 @@
     const addBtn = document.getElementById("addNoteBtn");
     const searchInput = document.getElementById("searchInput");
     const filterBtns = document.querySelectorAll(".status-filter button");
+
+    const settings = window.getSettings?.();
 
     /* ===============================
        LOAD FILTER STATE
@@ -46,6 +49,13 @@
         card.className = `note-card note-${state}`;
         card.dataset.id = note.id;
 
+        const showPreview = settings?.notes?.showPreview !== false;
+        const previewHTML = showPreview && note.content
+          ? `<div class="note-preview">
+               ${note.content.slice(0, 120)}${note.content.length > 120 ? "…" : ""}
+             </div>`
+          : "";
+
         card.innerHTML = `
           <div class="note-head">
             <h3>${note.title}</h3>
@@ -61,6 +71,8 @@
                 </div>`
               : ""
           }
+
+          ${previewHTML}
 
           <div class="note-meta">
             ${label} • ${timeAgo(note.updatedAt || note.createdAt)}
@@ -78,7 +90,7 @@
 
       /* DELETE */
       list.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.onclick = (e) => {
+        btn.onclick = e => {
           e.stopPropagation();
           const id = btn.dataset.id;
           if (confirm("Hapus catatan ini?")) {
@@ -115,7 +127,14 @@
        LOAD NOTES
        =============================== */
     function loadNotes() {
-      allNotes = sortNotesSmart(getNotes());
+      let notes = getNotes();
+
+      /* STEP E — SORT BEHAVIOR */
+      if (settings?.notes?.sort === "oldest") {
+        notes = [...notes].reverse();
+      }
+
+      allNotes = notes;
       applyFilter();
     }
 
@@ -142,6 +161,7 @@
     };
 
     window.addEventListener("notes:updated", loadNotes);
+    window.addEventListener("settings:updated", loadNotes);
 
     loadNotes();
   }

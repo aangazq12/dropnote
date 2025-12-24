@@ -1,14 +1,47 @@
-* { box-sizing: border-box; }
+/* =========================
+   RESET & BASE (LOCKED)
+   DROPNOTE v1.1+
+   ========================= */
 
+* {
+  box-sizing: border-box;
+}
+
+/* =========================
+   FONT SCALE (SETTINGS SAFE)
+   ========================= */
+:root {
+  --font-base: 14px; /* default – DO NOT CHANGE */
+}
+
+[data-font="small"] {
+  --font-base: 13px;
+}
+
+[data-font="default"] {
+  --font-base: 14px;
+}
+
+[data-font="large"] {
+  --font-base: 16px;
+}
+
+/* =========================
+   BODY
+   ========================= */
 body {
   margin: 0;
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: var(--font-base); /* SETTINGS CONTROLLED */
   background: var(--bg);
   color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* =========================
+   ELEMENTS
+   ========================= */
 button {
   font-family: inherit;
   cursor: pointer;
@@ -19,6 +52,9 @@ a {
   text-decoration: none;
 }
 
+/* =========================
+   UTILITIES
+   ========================= */
 .hidden,
 .is-hidden {
   display: none !important;
@@ -31,24 +67,30 @@ a {
 }
 
 .muted {
-  opacity: .6;
+  opacity: 0.6;
 }
 
-/* SPA RENDER GUARD */
+/* =========================
+   SPA RENDER GUARD
+   ========================= */
 #app.loading {
   opacity: 0;
 }
 
 #app.ready {
   opacity: 1;
-  transition: opacity .12s ease;
+  transition: opacity 0.12s ease;
 }
 
 #app {
   will-change: opacity;
 }
 
+/* =========================
+   BOTTOM NAV (KEYBOARD SAFE)
+   ========================= */
 .bottom-nav.hide-on-keyboard {
   transform: translateY(100%);
-  transition: transform .2s ease;
+  transition: transform 0.2s ease;
 }
+

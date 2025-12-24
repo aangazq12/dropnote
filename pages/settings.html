@@ -1,4 +1,3 @@
-
 <section class="settings-page page">
 
   <!-- HEADER -->
@@ -11,39 +10,120 @@
   <!-- CONTENT -->
   <section class="settings-content">
 
-    <!-- APPEARANCE -->
+    <!-- =========================
+         APPEARANCE
+         ========================= -->
     <section class="settings-section">
       <h2>Appearance</h2>
-      <p class="desc">
-        Tampilan aplikasi mengikuti mode Daylight
-        (Light / Dark) yang bisa diubah dari header.
-      </p>
+
+      <div class="setting-item">
+        <label for="themeSelect">Theme</label>
+        <select id="themeSelect">
+          <option value="system">System</option>
+          <option value="dark">Dark</option>
+          <option value="light">Light</option>
+        </select>
+      </div>
+
+      <div class="setting-item">
+        <label for="fontSelect">Font Size</label>
+        <select id="fontSelect">
+          <option value="small">Small</option>
+          <option value="default">Default</option>
+          <option value="large">Large</option>
+        </select>
+      </div>
     </section>
 
-    <!-- BEHAVIOR -->
+    <!-- =========================
+         EDITOR
+         ========================= -->
     <section class="settings-section">
-      <h2>Behavior</h2>
-      <ul>
-        <li>Home menampilkan ringkasan dan tag penting</li>
-        <li>Editor menyimpan isi tanpa auto-format</li>
-        <li>LFG menampilkan satu wallet utama</li>
+      <h2>Editor</h2>
+
+      <div class="setting-item checkbox">
+        <label>
+          <input type="checkbox" id="editorAutofocus">
+          Autofocus editor
+        </label>
+      </div>
+
+      <div class="setting-item checkbox">
+        <label>
+          <input type="checkbox" id="editorAutosave">
+          Autosave draft
+        </label>
+      </div>
+
+      <div class="setting-item">
+        <label for="defaultWalletInput">Default Wallet</label>
+        <input
+          id="defaultWalletInput"
+          type="text"
+          placeholder="Optional"
+        />
+      </div>
+    </section>
+
+    <!-- =========================
+         NOTES (STEP E)
+         ========================= -->
+    <section class="settings-section">
+      <h2>Notes</h2>
+
+      <div class="setting-item">
+        <label for="notesSortSelect">Default Sort</label>
+        <select id="notesSortSelect">
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+        </select>
+      </div>
+
+      <div class="setting-item checkbox">
+        <label>
+          <input type="checkbox" id="notesPreviewToggle">
+          Show note preview
+        </label>
+      </div>
+    </section>
+
+    <!-- =========================
+         DATA & BACKUP (STEP F)
+         ========================= -->
+    <section class="settings-section">
+      <h2>Data & Backup</h2>
+
+      <div class="setting-item">
+        <button id="exportDataBtn">Export Data</button>
+      </div>
+
+      <div class="setting-item">
+        <label for="importDataInput">Import Data</label>
+        <input
+          type="file"
+          id="importDataInput"
+          accept="application/json"
+        />
+      </div>
+
+      <div class="setting-item danger">
+        <button id="resetDataBtn">Reset All Data</button>
+      </div>
+
+      <p class="settings-note" id="storageInfo"></p>
+    </section>
+
+    <!-- =========================
+         ABOUT
+         ========================= -->
+    <section class="settings-section">
+      <h2>About</h2>
+      <ul class="settings-info">
+        <li>Version: <strong>v1.1</strong></li>
+        <li>Mode: <strong>SPA + PWA</strong></li>
+        <li>Storage: <strong>Local-first</strong></li>
       </ul>
     </section>
-
-    <!-- DATA -->
-    <section class="settings-section">
-      <h2>Data</h2>
-      <ul>
-        <li>Semua data disimpan secara lokal</li>
-        <li>Tidak ada akun atau server</li>
-        <li>Backup & reset akan tersedia di versi berikutnya</li>
-      </ul>
-    </section>
-
-    <!-- FOOTNOTE -->
-    <p class="settings-note">
-      Beberapa pengaturan akan tersedia di versi selanjutnya.
-    </p>
 
   </section>
 

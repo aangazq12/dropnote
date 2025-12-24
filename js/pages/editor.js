@@ -1,6 +1,7 @@
 /* ===============================
    EDITOR (FINAL)
    CREATE & EDIT NOTE 🔒
+   + STEP D: EDITOR DEFAULTS
    =============================== */
 
 (() => {
@@ -21,9 +22,32 @@
     const saveBtn = document.getElementById("saveBtn");
     const editorHint = document.getElementById("editorHint");
 
+    const settings = window.getSettings?.();
+
     const editId = sessionStorage.getItem("editNoteId");
     let editingNote = null;
     let isNewNote = !editId;
+
+    /* ===============================
+       STEP D — AUTOFUCUS
+       =============================== */
+    if (settings?.editor?.autofocus) {
+      (contentInput || titleInput)?.focus();
+    }
+
+    /* ===============================
+       STEP D — RESTORE DRAFT
+       =============================== */
+    const savedDraft = JSON.parse(
+      localStorage.getItem("dropnote_editor_draft") || "null"
+    );
+
+    if (savedDraft && !editId) {
+      titleInput.value ||= savedDraft.title || "";
+      walletInput.value ||= savedDraft.wallet || "";
+      tagInput.value ||= savedDraft.tags || "";
+      contentInput.value ||= savedDraft.content || "";
+    }
 
     /* ===============================
        AUTO RESIZE TEXTAREA
@@ -44,10 +68,7 @@
     });
 
     contentInput.addEventListener("focus", () => {
-      if (
-        isNewNote &&
-        contentInput.value.trim() === ""
-      ) {
+      if (isNewNote && contentInput.value.trim() === "") {
         editorHint?.classList.remove("hidden");
       }
     });
@@ -79,80 +100,113 @@
       }
     }
 
-/* ===============================
-   SAVE
-   =============================== */
-saveBtn.onclick = () => {
-  const title = titleInput.value.trim();
-  if (!title) {
-    alert("Judul wajib diisi");
-    return;
-  }
+    /* ===============================
+       STEP D — DEFAULT WALLET
+       =============================== */
+    if (!editId && settings?.editor?.defaultWallet) {
+      if (walletInput && !walletInput.value) {
+        walletInput.value = settings.editor.defaultWallet;
+      }
+    }
 
-  const wallet = walletInput.value.trim();
-  const tags = tagInput.value
-    .split(/[,\n|/]+/)
-    .map(t => t.trim())
-    .filter(Boolean);
+    /* ===============================
+       STEP D — AUTOSAVE DRAFT
+       =============================== */
+    let autosaveTimer = null;
 
-  const content = contentInput.value.trim();
+    function autosaveDraft() {
+      if (!settings?.editor?.autosave) return;
 
-  // ===============================
-  // UPDATE
-  // ===============================
-  if (editId && editingNote) {
-    updateNote(editId, {
-      title,
-      wallet,
-      tags,
-      content,
-      status:
-        editingNote.status === "Draft"
-          ? "Active"
-          : editingNote.status
+      const draft = {
+        title: titleInput.value,
+        wallet: walletInput.value,
+        tags: tagInput.value,
+        content: contentInput.value
+      };
+
+      localStorage.setItem(
+        "dropnote_editor_draft",
+        JSON.stringify(draft)
+      );
+    }
+
+    ["input", "change"].forEach(evt => {
+      document
+        .querySelector(".editor-body")
+        ?.addEventListener(evt, () => {
+          clearTimeout(autosaveTimer);
+          autosaveTimer = setTimeout(autosaveDraft, 600);
+        });
     });
 
-    showToast("💾 Changes saved");
+    /* ===============================
+       SAVE
+       =============================== */
+    saveBtn.onclick = () => {
+      const title = titleInput.value.trim();
+      if (!title) {
+        alert("Judul wajib diisi");
+        return;
+      }
 
-    sessionStorage.removeItem("editNoteId");
-  }
-  // ===============================
-  // CREATE
-  // ===============================
-  else {
-    addNote({
-      title,
-      wallet,
-      tags,
-      content
-    });
+      const wallet = walletInput.value.trim();
+      const tags = tagInput.value
+        .split(/[,\n|/]+/)
+        .map(t => t.trim())
+        .filter(Boolean);
 
-    showToast("✅ Note saved");
-  }
+      const content = contentInput.value.trim();
 
-  // 🔔 notify pages AFTER data change
-  window.dispatchEvent(new Event("notes:updated"));
+      // ===============================
+      // UPDATE
+      // ===============================
+      if (editId && editingNote) {
+        updateNote(editId, {
+          title,
+          wallet,
+          tags,
+          content,
+          status:
+            editingNote.status === "Draft"
+              ? "Active"
+              : editingNote.status
+        });
 
-  loadPage("notes");
-};
+        showToast("💾 Changes saved");
+
+        localStorage.removeItem("dropnote_editor_draft");
+        sessionStorage.removeItem("editNoteId");
+      }
+      // ===============================
+      // CREATE
+      // ===============================
+      else {
+        addNote({
+          title,
+          wallet,
+          tags,
+          content
+        });
+
+        showToast("✅ Note saved");
+        localStorage.removeItem("dropnote_editor_draft");
+      }
+
+      // 🔔 notify pages AFTER data change
+      window.dispatchEvent(new Event("notes:updated"));
+
+      loadPage("notes");
+    };
   }
 
   waitDom();
 })();
 
 /* ===============================
-   EDITOR LOGIC
-   =============================== */
-// init editor
-// save handler
-// input binding
-// dll...
-
-/* ===============================
    KEYBOARD AWARE BOTTOM NAV
    =============================== */
 
-(function(){
+(function () {
   const nav = document.querySelector(".bottom-nav");
   if (!nav) return;
 

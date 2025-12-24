@@ -256,5 +256,21 @@ if (themeBtn && window.toggleTheme) {
       openDrawer();
     }
   }, { passive: true });
+/* ===============================
+   DRAWER NAVIGATION (FINAL FIXED)
+   =============================== */
+drawer.querySelectorAll(".drawer-item[data-page]").forEach(item => {
+  item.addEventListener("click", () => {
+    const page = item.dataset.page;
+    if (!page) return;
 
+    // 1️⃣ Tutup drawer & unlock body
+    closeDrawer();
+
+    // 2️⃣ Navigasi setelah drawer tertutup
+    setTimeout(() => {
+      loadPage(page);
+    }, 200);
+  });
+});
 })();
