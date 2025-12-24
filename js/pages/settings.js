@@ -1,5 +1,5 @@
 /* ===============================
-   SETTINGS — APPEARANCE + EDITOR + NOTES + DATA (STEP F)
+   SETTINGS PAGE — FINAL (SPA SAFE)
    =============================== */
 
 (function () {
@@ -13,37 +13,41 @@
   // Notes
   let notesSortSelect, notesPreviewToggle;
 
-  // Data
+  // Data & Backup
   let exportDataBtn, importDataInput, resetDataBtn, storageInfo;
 
-  function applyToUI() {
-    const settings = window.getSettings?.();
-    if (!settings) return;
+  /* ===============================
+     SYNC SETTINGS → UI (READ ONLY)
+     =============================== */
+  function syncUI() {
+    const s = window.getSettings?.();
+    if (!s) return;
 
     // Appearance
-    themeSelect && (themeSelect.value = settings.appearance.theme);
-    fontSelect && (fontSelect.value = settings.appearance.fontSize);
+    themeSelect && (themeSelect.value = s.appearance.theme);
+    fontSelect && (fontSelect.value = s.appearance.fontSize);
 
     // Editor
-    editorAutofocus && (editorAutofocus.checked = !!settings.editor.autofocus);
-    editorAutosave && (editorAutosave.checked = !!settings.editor.autosave);
-    defaultWalletInput && (defaultWalletInput.value = settings.editor.defaultWallet || "");
+    editorAutofocus && (editorAutofocus.checked = !!s.editor.autofocus);
+    editorAutosave && (editorAutosave.checked = !!s.editor.autosave);
+    defaultWalletInput && (defaultWalletInput.value = s.editor.defaultWallet || "");
 
     // Notes
-    notesSortSelect && (notesSortSelect.value = settings.notes.sort);
-    notesPreviewToggle && (notesPreviewToggle.checked = !!settings.notes.showPreview);
+    notesSortSelect && (notesSortSelect.value = s.notes.sort);
+    notesPreviewToggle && (notesPreviewToggle.checked = !!s.notes.showPreview);
 
     // Storage info
     if (storageInfo) {
       const size = new Blob([JSON.stringify(localStorage)]).size;
-      storageInfo.textContent = `Local storage size: ${(size / 1024).toFixed(2)} KB`;
+      storageInfo.textContent =
+        `Local storage size: ${(size / 1024).toFixed(2)} KB`;
     }
   }
 
+  /* ===============================
+     INIT
+     =============================== */
   function init() {
-    const settings = window.getSettings?.();
-    if (!settings) return;
-
     // Appearance
     themeSelect = document.getElementById("themeSelect");
     fontSelect = document.getElementById("fontSelect");
@@ -57,16 +61,48 @@
     notesSortSelect = document.getElementById("notesSortSelect");
     notesPreviewToggle = document.getElementById("notesPreviewToggle");
 
-    // Data
+    // Data & Backup
     exportDataBtn = document.getElementById("exportDataBtn");
     importDataInput = document.getElementById("importDataInput");
     resetDataBtn = document.getElementById("resetDataBtn");
     storageInfo = document.getElementById("storageInfo");
 
-    applyToUI();
+    // Initial sync (READ ONLY)
+    syncUI();
 
     /* ===============================
-       DATA ACTIONS
+       SETTINGS LISTENERS
+       =============================== */
+    themeSelect?.addEventListener("change", e => {
+      updateSettings({ appearance: { theme: e.target.value } });
+    });
+
+    fontSelect?.addEventListener("change", e => {
+      updateSettings({ appearance: { fontSize: e.target.value } });
+    });
+
+    editorAutofocus?.addEventListener("change", e => {
+      updateSettings({ editor: { autofocus: e.target.checked } });
+    });
+
+    editorAutosave?.addEventListener("change", e => {
+      updateSettings({ editor: { autosave: e.target.checked } });
+    });
+
+    defaultWalletInput?.addEventListener("input", e => {
+      updateSettings({ editor: { defaultWallet: e.target.value } });
+    });
+
+    notesSortSelect?.addEventListener("change", e => {
+      updateSettings({ notes: { sort: e.target.value } });
+    });
+
+    notesPreviewToggle?.addEventListener("change", e => {
+      updateSettings({ notes: { showPreview: e.target.checked } });
+    });
+
+    /* ===============================
+       DATA & BACKUP
        =============================== */
 
     // EXPORT
@@ -99,11 +135,17 @@
           const data = JSON.parse(reader.result);
 
           if (Array.isArray(data.notes)) {
-            localStorage.setItem("dropnote_notes", JSON.stringify(data.notes));
+            localStorage.setItem(
+              "dropnote_notes",
+              JSON.stringify(data.notes)
+            );
           }
 
           if (data.settings) {
-            localStorage.setItem("dropnote_settings", JSON.stringify(data.settings));
+            localStorage.setItem(
+              "dropnote_settings",
+              JSON.stringify(data.settings)
+            );
           }
 
           alert("Data imported. App will reload.");
@@ -129,8 +171,11 @@
     });
   }
 
-  window.addEventListener("settings:updated", applyToUI);
-  window.addEventListener("notes:updated", applyToUI);
+  /* ===============================
+     EVENTS
+     =============================== */
+  window.addEventListener("settings:updated", syncUI);
+  window.addEventListener("notes:updated", syncUI);
 
   init();
 
