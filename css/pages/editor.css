@@ -1,7 +1,10 @@
-/* =========================
-   EDITOR PAGE – DROPNOTE STYLE
-   ========================= */
+/* =================================================
+   EDITOR PAGE – DROPNOTE (PREMIUM CALM)
+   ================================================= */
 
+/* =========================
+   PAGE STRUCTURE
+   ========================= */
 .editor-page {
   height: 100%;
   display: flex;
@@ -9,12 +12,12 @@
 }
 
 /* =========================
-   BODY
+   BODY / SCROLL AREA
    ========================= */
 .editor-body {
   flex: 1;
   overflow-y: auto;
-  padding-bottom: 120px;
+  padding-bottom: 120px; /* space for save bar */
 }
 
 /* =========================
@@ -28,38 +31,36 @@
 }
 
 /* =========================
-   INPUT & TEXTAREA (BASE)
+   INPUT (TITLE / LINK / TAGS)
    ========================= */
-.editor-body input,
-.editor-body textarea {
+.editor-body input {
   width: 100%;
   margin-top: 6px;
   padding: 12px 14px;
+
   border-radius: 14px;
   border: 1px solid var(--border-soft);
+
   font-size: 14px;
   background: var(--bg);
   color: var(--text);
 }
 
 /* =========================
-   TEXTAREA DEFAULT
-   ========================= */
-.editor-body textarea {
-  min-height: 180px;
-  resize: vertical;
-  line-height: 1.6;
-}
-
-/* =========================
-   CONTENT SURFACE
+   CONTENT CARD (WRITING SURFACE)
    ========================= */
 .editor-card {
   position: relative;
   margin-top: 6px;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 180px;
+  padding: 20px 18px;
+
   background: var(--drawer-bg);
   border-radius: 20px;
-  padding: 20px 18px;
 
   box-shadow:
     0 1px 0 rgba(0,0,0,.03),
@@ -76,25 +77,27 @@
 }
 
 /* =========================
-   MAIN TEXTAREA (OVERRIDE)
+   MAIN TEXTAREA (PRIMARY INPUT)
    ========================= */
 .editor-card textarea {
-  border: none;
-  padding: 24px 0 0 0;
-  margin: 0;
+  flex: 1;
 
-  min-height: 160px;
+  border: none;
+  margin: 0;
+  padding: 24px 0 12px 0; /* space for hint */
+
   resize: none;
 
   font-size: 15px;
   line-height: 1.65;
 
   background: transparent;
+  color: var(--text);
   outline: none;
 }
 
 /* =========================
-   HINT
+   HINT / PLACEHOLDER OVERLAY
    ========================= */
 .editor-hint {
   position: absolute;
@@ -121,9 +124,9 @@
 .save-bar {
   position: sticky;
   bottom: 0;
+  z-index: 10;
 
   padding: 12px 16px;
-  z-index: 10;
 
   background: linear-gradient(
     to top,
@@ -136,6 +139,7 @@
 #saveBtn {
   width: 100%;
   padding: 14px;
+
   border-radius: 16px;
   border: none;
 
@@ -147,27 +151,28 @@
 }
 
 /* =================================================
-   EDITOR — DARK MODE FIELD POLISH
+   DARK MODE – EDITOR POLISH
    ================================================= */
 
-[data-theme="dark"] .editor-body input,
-[data-theme="dark"] .editor-body textarea {
+[data-theme="dark"] .editor-body input {
   background: rgba(255,255,255,0.035);
   border: 1px solid rgba(255,255,255,0.10);
   color: var(--text);
 }
 
-[data-theme="dark"] .editor-body input::placeholder,
-[data-theme="dark"] .editor-body textarea::placeholder {
+[data-theme="dark"] .editor-body input::placeholder {
   color: rgba(255,255,255,0.35);
 }
 
 [data-theme="dark"] .editor-body input:focus,
-[data-theme="dark"] .editor-body textarea:focus {
+[data-theme="dark"] .editor-body input:focus {
   outline: none;
   border-color: rgba(122,162,255,0.35);
-  background: rgba(255,255,255,0.045);
   box-shadow: 0 0 0 2px rgba(122,162,255,0.18);
+}
+
+[data-theme="dark"] .editor-card textarea:focus {
+  outline: none;
 }
 
 [data-theme="dark"] .editor-card {
