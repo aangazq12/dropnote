@@ -2,9 +2,9 @@ console.log("APP.JS LOADED");
 
 const app = document.getElementById("app");
 
-/* ===============================
-   PAGE CSS LOADER (SAFE)
-   =============================== */
+/* =================================================
+   PAGE CSS LOADER (SAFE / NO FOUC)
+   ================================================= */
 function loadPageCSS(page) {
   const map = {
     home: "css/pages/home.css",
@@ -31,14 +31,19 @@ function loadPageCSS(page) {
   document.head.appendChild(link);
 }
 
-/* ===============================
-   APP ROUTER (FINAL 🔒)
-   =============================== */
-window.loadPage = function (page) {
+/* =================================================
+   APP ROUTER (SPA CORE – STABLE)
+   ================================================= */
+window.loadPage = function (page, fromPop = false) {
+  // history only if user action
+  if (!fromPop) {
+    history.pushState({ page }, "", `#${page}`);
+  }
+
   app.classList.add("loading");
   app.classList.remove("ready");
 
-  // ⬇️ LOAD CSS DULU (FOUC FIX)
+  // load CSS first (FOUC fix)
   loadPageCSS(page);
 
   fetch(`pages/${page}.html`)
@@ -49,17 +54,18 @@ window.loadPage = function (page) {
     .then(html => {
       app.innerHTML = html;
 
-      // render after 1 frame
+      // render after one frame
       requestAnimationFrame(() => {
         app.classList.remove("loading");
         app.classList.add("ready");
       });
 
-      // remove old page script
+      // remove old page scripts
       document
         .querySelectorAll("script[data-page-script]")
         .forEach(s => s.remove());
 
+      // page script mapping
       let scriptSrc = null;
       if (page === "home") scriptSrc = "js/pages/home.js";
       if (page === "notes") scriptSrc = "js/pages/notes.js";
@@ -77,61 +83,59 @@ window.loadPage = function (page) {
       }
     })
     .catch(err => {
+      console.error(err);
       app.innerHTML = "<p style='padding:16px'>Error loading page</p>";
       app.classList.remove("loading");
       app.classList.add("ready");
-      console.error(err);
     });
 };
 
-/* ===============================
-   DEFAULT PAGE
-   =============================== */
-window.addEventListener("load", () => {
-  setTimeout(() => loadPage("home"), 30);
+/* =================================================
+   SYSTEM BACK BUTTON HANDLER (ANDROID / PWA)
+   ================================================= */
+window.addEventListener("popstate", (e) => {
+  const page = e.state?.page || "home";
+  loadPage(page, true);
 });
 
-/* =========================
-   PWA INSTALL HANDLER (FINAL)
-   ========================= */
+/* =================================================
+   DEFAULT PAGE (FIRST LOAD)
+   ================================================= */
+window.addEventListener("load", () => {
+  history.replaceState({ page: "home" }, "", "#home");
+  setTimeout(() => loadPage("home", true), 30);
+});
 
+/* =================================================
+   PWA INSTALL HANDLER (FINAL & QUIET)
+   ================================================= */
 let deferredPrompt;
 const installBtn = document.getElementById("installBtn");
 
-/* =========================
-   STATE CHECK
-   ========================= */
-
-// true jika sudah standalone
+/* --- state detection --- */
 const isStandalone =
   window.matchMedia("(display-mode: standalone)").matches ||
   window.navigator.standalone === true;
 
-// true jika pernah install (persisted)
 const alreadyInstalled =
   localStorage.getItem("pwaInstalled") === "true";
 
-/* hide by default if not needed */
+/* hide if not needed */
 if (installBtn && (isStandalone || alreadyInstalled)) {
   installBtn.classList.add("is-hidden");
 }
 
-/* =========================
-   CAPTURE INSTALL PROMPT
-   ========================= */
+/* capture install prompt */
 window.addEventListener("beforeinstallprompt", (e) => {
   e.preventDefault();
   deferredPrompt = e;
 
-  // hanya tampil jika memang relevan
   if (installBtn && !isStandalone && !alreadyInstalled) {
     installBtn.classList.remove("is-hidden");
   }
 });
 
-/* =========================
-   INSTALL BUTTON CLICK
-   ========================= */
+/* install click */
 if (installBtn) {
   installBtn.addEventListener("click", async () => {
     if (!deferredPrompt) return;
@@ -139,7 +143,6 @@ if (installBtn) {
     deferredPrompt.prompt();
     const result = await deferredPrompt.userChoice;
 
-    // jika user accept → simpan state
     if (result.outcome === "accepted") {
       localStorage.setItem("pwaInstalled", "true");
     }
@@ -149,9 +152,7 @@ if (installBtn) {
   });
 }
 
-/* =========================
-   AFTER INSTALLED
-   ========================= */
+/* installed event */
 window.addEventListener("appinstalled", () => {
   localStorage.setItem("pwaInstalled", "true");
   deferredPrompt = null;
