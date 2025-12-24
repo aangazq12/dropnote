@@ -88,16 +88,23 @@
         list.appendChild(card);
       });
 
-      /* DELETE */
-      list.querySelectorAll(".delete-btn").forEach(btn => {
-        btn.onclick = e => {
-          e.stopPropagation();
-          const id = btn.dataset.id;
-          if (confirm("Hapus catatan ini?")) {
-            deleteNote(id);
-          }
-        };
-      });
+/* DELETE (WITH UNDO) */
+list.querySelectorAll(".delete-btn").forEach(btn => {
+  btn.onclick = e => {
+    e.stopPropagation();
+    const id = btn.dataset.id;
+
+    if (!confirm("Hapus catatan ini?")) return;
+
+    // 🔒 soft delete + single undo
+    deleteNoteWithUndo(id);
+
+    // 🔔 undo toast (single, non-queued)
+    showToast("🗑️ Note deleted — Undo", {
+      undo: true
+    });
+  };
+});
     }
 
     /* ===============================

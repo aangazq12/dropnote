@@ -144,27 +144,43 @@ window.__deletedNoteBuffer = null;
 window.__deletedNoteTimer = null;
 
 /* ===============================
-   DELETE WITH UNDO
+   INTERNAL: FINALIZE DELETE
    =============================== */
-window.deleteNoteWithUndo = function (noteId, delay = 5000) {
+function finalizePendingDelete() {
+  // Untuk v1.1:
+  // note sudah dihapus dari storage saat soft delete
+  // finalize cukup dengan membuang buffer
+  window.__deletedNoteBuffer = null;
+  clearTimeout(window.__deletedNoteTimer);
+  window.__deletedNoteTimer = null;
+}
+
+/* ===============================
+   DELETE WITH UNDO (SINGLE)
+   =============================== */
+window.deleteNoteWithUndo = function (noteId, delay = 2500) {
   const notes = getNotes();
   const index = notes.findIndex(n => String(n.id) === String(noteId));
   if (index === -1) return;
 
+  // 🔒 RULE: delete baru memfinalisasi undo lama
+  if (window.__deletedNoteBuffer) {
+    finalizePendingDelete();
+  }
+
   const deleted = notes[index];
 
-  // simpan buffer
+  // simpan buffer (hanya satu)
   window.__deletedNoteBuffer = deleted;
 
-  // hapus dari list
+  // soft delete (hapus dari list, belum final secara UX)
   notes.splice(index, 1);
   saveNotes(notes);
-  emitNotesUpdated(); // 🔒 FIX
+  emitNotesUpdated();
 
-  // final delete timer
-  clearTimeout(window.__deletedNoteTimer);
+  // undo window
   window.__deletedNoteTimer = setTimeout(() => {
-    window.__deletedNoteBuffer = null;
+    finalizePendingDelete();
   }, delay);
 };
 
@@ -175,10 +191,11 @@ window.undoDeleteNote = function () {
   if (!window.__deletedNoteBuffer) return;
 
   const notes = getNotes();
+
+  // restore (v1.1: restore ke atas, diterima)
   notes.unshift(window.__deletedNoteBuffer);
   saveNotes(notes);
-  emitNotesUpdated(); // 🔒 FIX
+  emitNotesUpdated();
 
-  window.__deletedNoteBuffer = null;
-  clearTimeout(window.__deletedNoteTimer);
+  finalizePendingDelete();
 };

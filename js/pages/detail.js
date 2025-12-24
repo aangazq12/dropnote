@@ -67,16 +67,22 @@
       loadPage("editor");
     };
 
-    /* ===============================
-       DELETE
-       =============================== */
-    document.getElementById("deleteBtn").onclick = () => {
-  if (!confirm("Catatan ini akan dihapus permanen")) return;
+/* ===============================
+   DELETE (WITH UNDO)
+   =============================== */
+document.getElementById("deleteBtn").onclick = () => {
+  // 🔒 soft confirm (jujur & konsisten)
+  if (!confirm("Hapus catatan?")) return;
 
+  // 🔒 soft delete + single undo
   deleteNoteWithUndo(note.id);
 
-  showToast("🗑️ Note deleted — Undo");
+  // 🔔 undo toast (single, non-queued)
+  showToast("🗑️ Note deleted — Undo", {
+    undo: true
+  });
 
+  // behavior existing (tetap)
   sessionStorage.removeItem("editNoteId");
   loadPage("notes");
 };

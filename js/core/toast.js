@@ -1,14 +1,33 @@
 /* =========================
-   TOAST QUEUE ENGINE (FINAL)
+   TOAST ENGINE (FINAL v1.1)
+   Notification + Single Undo
    ========================= */
 
 (() => {
-  const queue = [];
+  let queue = [];
   let isShowing = false;
 
-  function createToast({ message, duration = 5000, undo = false }) {
-    const root = document.getElementById("toastRoot");
-    if (!root) return;
+  // 🔒 SINGLE UNDO STATE
+  let activeUndoToast = null;
+  let activeUndoTimer = null;
+
+  function ensureRoot() {
+    let root = document.getElementById("toastRoot");
+    if (!root) {
+      root = document.createElement("div");
+      root.id = "toastRoot";
+      document.body.appendChild(root);
+    }
+    return root;
+  }
+
+  function createToast({ message, duration = 1600, undo = false }) {
+    const root = ensureRoot();
+
+    // 🔒 RULE: undo toast TIDAK BOLEH queue
+    if (undo) {
+      clearUndoToast();
+    }
 
     const toast = document.createElement("div");
     toast.className = "toast";
@@ -19,9 +38,12 @@
 
     if (undo) {
       toast.dataset.undo = "true";
+
       progress = document.createElement("div");
       progress.className = "toast-progress";
       toast.appendChild(progress);
+
+      activeUndoToast = toast;
     }
 
     root.appendChild(toast);
@@ -49,14 +71,14 @@
        PAUSE / RESUME ON PRESS
        =============================== */
     const pause = () => {
-  animation?.pause();
-  toast.classList.add("paused");
-};
+      animation?.pause();
+      toast.classList.add("paused");
+    };
 
-const resume = () => {
-  animation?.play();
-  toast.classList.remove("paused");
-};
+    const resume = () => {
+      animation?.play();
+      toast.classList.remove("paused");
+    };
 
     toast.addEventListener("pointerdown", pause);
     toast.addEventListener("pointerup", resume);
@@ -64,19 +86,30 @@ const resume = () => {
     toast.addEventListener("pointerleave", resume);
 
     // HIDE
-    setTimeout(() => {
+    const hide = () => {
       toast.classList.remove("show");
 
       toast.addEventListener(
         "transitionend",
         () => {
           toast.remove();
-          isShowing = false;
-          processQueue();
+
+          if (undo) {
+            clearUndoToast();
+          } else {
+            isShowing = false;
+            processQueue();
+          }
         },
         { once: true }
       );
-    }, duration);
+    };
+
+    const timer = setTimeout(hide, duration);
+
+    if (undo) {
+      activeUndoTimer = timer;
+    }
   }
 
   function processQueue() {
@@ -87,15 +120,36 @@ const resume = () => {
     createToast(queue.shift());
   }
 
+  function clearUndoToast() {
+    if (activeUndoToast) {
+      activeUndoToast.remove();
+      activeUndoToast = null;
+    }
+    clearTimeout(activeUndoTimer);
+    activeUndoTimer = null;
+  }
+
   /* =========================
      GLOBAL API
      ========================= */
   window.showToast = function (message, options = {}) {
+    const isUndo = options.undo === true;
+
+    if (isUndo) {
+      createToast({
+        message,
+        duration: options.duration || 2500,
+        undo: true
+      });
+      return;
+    }
+
     queue.push({
       message,
       duration: options.duration || 1600,
-      undo: options.undo || false
+      undo: false
     });
+
     processQueue();
   };
 })();
@@ -104,14 +158,11 @@ const resume = () => {
    TOAST UNDO CLICK (GLOBAL)
    =============================== */
 document.addEventListener("click", e => {
-  const toast = e.target.closest(".toast");
+  const toast = e.target.closest(".toast[data-undo='true']");
   if (!toast) return;
 
-  if (toast.dataset.undo === "true") {
-    if (typeof undoDeleteNote === "function") {
-      undoDeleteNote();
-      showToast("↩️ Delete undone");
-      window.dispatchEvent(new Event("notes:updated"));
-    }
+  if (typeof undoDeleteNote === "function") {
+    undoDeleteNote();
+    showToast("↩️ Delete undone");
   }
 });
