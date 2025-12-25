@@ -1,6 +1,7 @@
 console.log("APP.JS LOADED");
 
 const app = document.getElementById("app");
+let currentPage = "home";
 
 /* =================================================
    PAGE CSS LOADER (SAFE / NO FOUC)
@@ -35,14 +36,19 @@ function loadPageCSS(page) {
    APP ROUTER (SPA CORE – STABLE)
    ================================================= */
 window.loadPage = function (page, fromPop = false) {
+
+  // 🛑 prevent reload same page (Android / WebView glitch fix)
+  if (page === currentPage && !fromPop) return;
+  currentPage = page;
+
   // history only if user action
   if (!fromPop) {
-  if (page === "home") {
-    history.replaceState({ page }, "", "#home");
-  } else {
-    history.pushState({ page }, "", `#${page}`);
+    if (page === "home") {
+      history.replaceState({ page }, "", "#home");
+    } else {
+      history.pushState({ page }, "", `#${page}`);
+    }
   }
-}
 
   app.classList.add("loading");
   app.classList.remove("ready");
@@ -56,15 +62,18 @@ window.loadPage = function (page, fromPop = false) {
       return res.text();
     })
     .then(html => {
+      // 🔔 notify page cleanup BEFORE replace
+      window.dispatchEvent(new Event("page:leave"));
+
       app.innerHTML = html;
 
-// tunggu CSS + layout stabil
-requestAnimationFrame(() => {
-  requestAnimationFrame(() => {
-    app.classList.remove("loading");
-    app.classList.add("ready");
-  });
-});
+      // tunggu CSS + layout stabil (anti flicker)
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          app.classList.remove("loading");
+          app.classList.add("ready");
+        });
+      });
 
       // remove old page scripts
       document
@@ -95,15 +104,6 @@ requestAnimationFrame(() => {
       app.classList.add("ready");
     });
 };
-
-/* =================================================
-   SYSTEM BACK BUTTON HANDLER (ANDROID / PWA)
-   ================================================= */
-window.addEventListener("popstate", (e) => {
-  const page = e.state?.page || "home";
-  loadPage(page, true);
-});
-
 /* =================================================
    DEFAULT PAGE (FIRST LOAD)
    ================================================= */
