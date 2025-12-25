@@ -21,7 +21,7 @@
     const contentInput = document.getElementById("contentInput");
     const saveBtn      = document.getElementById("saveBtn");
     const editorHint   = document.getElementById("editorHint");
-
+     
     /* ===============================
        TAG SUGGESTION (EDITOR)
        =============================== */
@@ -86,11 +86,11 @@
        =============================== */
 
     const settings = window.getSettings?.();
-    const editId   = sessionStorage.getItem("editNoteId");
+const editId   = sessionStorage.getItem("editNoteId");
+const isNewFromHome = sessionStorage.getItem("editor:new") === "1";
 
-    let editingNote = null;
-    let isNewNote   = !editId;
-
+let editingNote = null;
+let isNewNote = isNewFromHome || !editId;
     /* ===============================
        STEP D — AUTOFUCUS
        =============================== */
@@ -107,7 +107,7 @@
       localStorage.getItem("dropnote_editor_draft") || "null"
     );
 
-    if (savedDraft && !editId) {
+    if (savedDraft && !editId && !isNewFromHome) {
       titleInput.value   ||= savedDraft.title   || "";
       walletInput.value  ||= savedDraft.wallet  || "";
       tagInput.value     ||= savedDraft.tags    || "";
@@ -166,7 +166,10 @@
         setTimeout(() => autoResize(contentInput), 0);
       }
     }
-
+/* ===============================
+   CLEAN NEW FLAG (IMPORTANT)
+   =============================== */
+sessionStorage.removeItem("editor:new");
     /* ===============================
        STEP D — DEFAULT WALLET
        =============================== */
@@ -268,11 +271,12 @@
         sessionStorage.removeItem("editNoteId");
       }
       // CREATE
-      else {
-        addNote({ title, wallet, tags, content });
-        showToast("✅ Note saved");
-        localStorage.removeItem("dropnote_editor_draft");
-      }
+else {
+  addNote({ title, wallet, tags, content });
+  showToast("✅ Note saved");
+  localStorage.removeItem("dropnote_editor_draft");
+  sessionStorage.removeItem("editor:new"); // optional safety
+}
 
       window.dispatchEvent(new Event("notes:updated"));
 history.replaceState({ page: "notes" }, "", "#notes");
