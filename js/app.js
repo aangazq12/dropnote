@@ -37,8 +37,12 @@ function loadPageCSS(page) {
 window.loadPage = function (page, fromPop = false) {
   // history only if user action
   if (!fromPop) {
+  if (page === "home") {
+    history.replaceState({ page }, "", "#home");
+  } else {
     history.pushState({ page }, "", `#${page}`);
   }
+}
 
   app.classList.add("loading");
   app.classList.remove("ready");
