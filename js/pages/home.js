@@ -203,7 +203,13 @@ if (themeBtn && window.toggleTheme) {
   const lfgFab    = document.querySelector(".lfg-fab");
 
   /* 🔹 ADD-ON (SAFE) */
-  const addFab    = document.querySelector(".add-fab");
+  if (addFab) {
+  addFab.onclick = () => {
+    sessionStorage.setItem("editor:new", "1");
+    sessionStorage.removeItem("editNoteId");
+    loadPage("editor");
+  };
+}
 
   if (!drawer || !overlay || !menuBtn) return;
 

@@ -163,9 +163,10 @@ list.querySelectorAll(".delete-btn").forEach(btn => {
     });
 
     addBtn.onclick = () => {
-      sessionStorage.removeItem("editNoteId");
-      loadPage("editor");
-    };
+  sessionStorage.setItem("editor:new", "1");
+  sessionStorage.removeItem("editNoteId");
+  loadPage("editor");
+};
 
     window.addEventListener("notes:updated", loadNotes);
     window.addEventListener("settings:updated", loadNotes);
