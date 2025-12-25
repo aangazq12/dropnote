@@ -72,3 +72,9 @@ a {
 #app.ready {
   visibility: visible;
 }
+
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-user-select: none;
+  user-select: none;
+}
