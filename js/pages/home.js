@@ -204,11 +204,11 @@ if (themeBtn && window.toggleTheme) {
 
   /* 🔹 ADD-ON (SAFE) */
   if (addFab) {
-  addFab.onclick = () => {
+  addFab.addEventListener("click", () => {
     sessionStorage.setItem("editor:new", "1");
     sessionStorage.removeItem("editNoteId");
     loadPage("editor");
-  };
+  });
 }
 
   if (!drawer || !overlay || !menuBtn) return;
