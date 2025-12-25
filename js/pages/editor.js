@@ -15,22 +15,86 @@
   };
 
   function initEditor() {
-    const titleInput = document.getElementById("titleInput");
-    const walletInput = document.getElementById("linkInput");
-    const tagInput = document.getElementById("tagsInput");
+    const titleInput   = document.getElementById("titleInput");
+    const walletInput  = document.getElementById("linkInput");
+    const tagInput     = document.getElementById("tagsInput");
     const contentInput = document.getElementById("contentInput");
-    const saveBtn = document.getElementById("saveBtn");
-    const editorHint = document.getElementById("editorHint");
+    const saveBtn      = document.getElementById("saveBtn");
+    const editorHint   = document.getElementById("editorHint");
+
+    /* ===============================
+       TAG SUGGESTION (EDITOR)
+       =============================== */
+
+    // inject container once
+    const tagSuggest = document.createElement("div");
+    tagSuggest.className = "tag-suggest";
+    tagSuggest.style.display = "none";
+    tagInput.parentNode.appendChild(tagSuggest);
+
+    // helper: format tag (display & save)
+    function formatTag(tag) {
+      const t = String(tag || "").trim();
+      if (!t) return "";
+
+      // singkatan → FULL CAPS
+      if (t.length <= 4) return t.toUpperCase();
+
+      // normal → Capitalized
+      return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
+    }
+
+    // helper: get last token after comma
+    function getLastTagToken(value) {
+      const parts = value.split(",");
+      return parts[parts.length - 1].trim();
+    }
+
+    // render suggestion list
+    function renderTagSuggest(list) {
+      tagSuggest.innerHTML = "";
+
+      if (!list.length) {
+        tagSuggest.style.display = "none";
+        return;
+      }
+
+      list.slice(0, 6).forEach(tag => {
+        const item = document.createElement("div");
+        item.className = "tag-suggest-item";
+        item.textContent = formatTag(tag);
+
+        item.onclick = () => {
+          const parts = tagInput.value.split(",");
+          parts[parts.length - 1] = " " + formatTag(tag);
+
+          tagInput.value =
+            parts.join(",").replace(/^ /, "") + ", ";
+
+          tagSuggest.style.display = "none";
+          tagInput.focus();
+        };
+
+        tagSuggest.appendChild(item);
+      });
+
+      tagSuggest.style.display = "block";
+    }
+
+    /* ===============================
+       SETTINGS & MODE
+       =============================== */
 
     const settings = window.getSettings?.();
+    const editId   = sessionStorage.getItem("editNoteId");
 
-    const editId = sessionStorage.getItem("editNoteId");
     let editingNote = null;
-    let isNewNote = !editId;
+    let isNewNote   = !editId;
 
     /* ===============================
        STEP D — AUTOFUCUS
        =============================== */
+
     if (settings?.editor?.autofocus) {
       (contentInput || titleInput)?.focus();
     }
@@ -38,20 +102,22 @@
     /* ===============================
        STEP D — RESTORE DRAFT
        =============================== */
+
     const savedDraft = JSON.parse(
       localStorage.getItem("dropnote_editor_draft") || "null"
     );
 
     if (savedDraft && !editId) {
-      titleInput.value ||= savedDraft.title || "";
-      walletInput.value ||= savedDraft.wallet || "";
-      tagInput.value ||= savedDraft.tags || "";
+      titleInput.value   ||= savedDraft.title   || "";
+      walletInput.value  ||= savedDraft.wallet  || "";
+      tagInput.value     ||= savedDraft.tags    || "";
       contentInput.value ||= savedDraft.content || "";
     }
 
     /* ===============================
        AUTO RESIZE TEXTAREA
        =============================== */
+
     const autoResize = el => {
       el.style.height = "auto";
       el.style.height = el.scrollHeight + "px";
@@ -60,7 +126,7 @@
     contentInput.addEventListener("input", () => {
       autoResize(contentInput);
 
-      if (contentInput.value.trim().length > 0) {
+      if (contentInput.value.trim()) {
         editorHint?.classList.add("hidden");
       } else if (isNewNote) {
         editorHint?.classList.remove("hidden");
@@ -68,13 +134,13 @@
     });
 
     contentInput.addEventListener("focus", () => {
-      if (isNewNote && contentInput.value.trim() === "") {
+      if (isNewNote && !contentInput.value.trim()) {
         editorHint?.classList.remove("hidden");
       }
     });
 
     contentInput.addEventListener("blur", () => {
-      if (contentInput.value.trim() === "") {
+      if (!contentInput.value.trim()) {
         editorHint?.classList.add("hidden");
       }
     });
@@ -82,15 +148,16 @@
     /* ===============================
        LOAD EDIT MODE
        =============================== */
+
     if (editId) {
       editingNote = getNotes().find(
         n => String(n.id) === String(editId)
       );
 
       if (editingNote) {
-        titleInput.value = editingNote.title || "";
-        walletInput.value = editingNote.wallet || "";
-        tagInput.value = (editingNote.tags || []).join(", ");
+        titleInput.value   = editingNote.title   || "";
+        walletInput.value  = editingNote.wallet  || "";
+        tagInput.value     = (editingNote.tags || []).join(", ");
         contentInput.value = editingNote.content || "";
 
         editorHint?.classList.add("hidden");
@@ -103,8 +170,9 @@
     /* ===============================
        STEP D — DEFAULT WALLET
        =============================== */
+
     if (!editId && settings?.editor?.defaultWallet) {
-      if (walletInput && !walletInput.value) {
+      if (!walletInput.value) {
         walletInput.value = settings.editor.defaultWallet;
       }
     }
@@ -112,15 +180,16 @@
     /* ===============================
        STEP D — AUTOSAVE DRAFT
        =============================== */
+
     let autosaveTimer = null;
 
     function autosaveDraft() {
       if (!settings?.editor?.autosave) return;
 
       const draft = {
-        title: titleInput.value,
-        wallet: walletInput.value,
-        tags: tagInput.value,
+        title:   titleInput.value,
+        wallet:  walletInput.value,
+        tags:    tagInput.value,
         content: contentInput.value
       };
 
@@ -140,8 +209,32 @@
     });
 
     /* ===============================
+       TAG INPUT — SUGGESTION LOGIC
+       =============================== */
+
+    tagInput.addEventListener("input", () => {
+      if (!window.Tags) return;
+
+      const token = getLastTagToken(tagInput.value);
+      if (!token) {
+        tagSuggest.style.display = "none";
+        return;
+      }
+
+      const results = Tags.search(token);
+      renderTagSuggest(results);
+    });
+
+    tagInput.addEventListener("blur", () => {
+      setTimeout(() => {
+        tagSuggest.style.display = "none";
+      }, 150);
+    });
+
+    /* ===============================
        SAVE
        =============================== */
+
     saveBtn.onclick = () => {
       const title = titleInput.value.trim();
       if (!title) {
@@ -152,14 +245,12 @@
       const wallet = walletInput.value.trim();
       const tags = tagInput.value
         .split(/[,\n|/]+/)
-        .map(t => t.trim())
+        .map(formatTag)
         .filter(Boolean);
 
       const content = contentInput.value.trim();
 
-      // ===============================
       // UPDATE
-      // ===============================
       if (editId && editingNote) {
         updateNote(editId, {
           title,
@@ -173,28 +264,17 @@
         });
 
         showToast("💾 Changes saved");
-
         localStorage.removeItem("dropnote_editor_draft");
         sessionStorage.removeItem("editNoteId");
       }
-      // ===============================
       // CREATE
-      // ===============================
       else {
-        addNote({
-          title,
-          wallet,
-          tags,
-          content
-        });
-
+        addNote({ title, wallet, tags, content });
         showToast("✅ Note saved");
         localStorage.removeItem("dropnote_editor_draft");
       }
 
-      // 🔔 notify pages AFTER data change
       window.dispatchEvent(new Event("notes:updated"));
-
       loadPage("notes");
     };
   }
@@ -206,7 +286,7 @@
    KEYBOARD AWARE BOTTOM NAV
    =============================== */
 
-(function () {
+(() => {
   const nav = document.querySelector(".bottom-nav");
   if (!nav) return;
 
@@ -225,7 +305,6 @@
   document.addEventListener("focusin", onFocus);
   document.addEventListener("focusout", onBlur);
 
-  // 🧹 cleanup when leaving editor page (SPA-safe)
   window.addEventListener("page:leave", () => {
     document.removeEventListener("focusin", onFocus);
     document.removeEventListener("focusout", onBlur);

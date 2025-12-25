@@ -1,0 +1,62 @@
+/* ===============================
+   TAG SUGGESTION — DROPNOTE
+   Premium Calm / Mobile-first
+   =============================== */
+
+.tag-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+
+  background: var(--drawer-bg);
+  border-radius: 14px;
+
+  box-shadow:
+    0 8px 24px rgba(0,0,0,.12),
+    inset 0 0 0 1px var(--border-soft);
+
+  overflow: hidden;
+  z-index: 20;
+}
+
+/* item */
+.tag-suggest-item {
+  padding: 12px 14px;
+  font-size: 14px;
+  color: var(--text);
+
+  cursor: pointer;
+  user-select: none;
+
+  transition:
+    background .15s ease,
+    color .15s ease;
+}
+
+/* hover / tap */
+.tag-suggest-item:hover,
+.tag-suggest-item:active {
+  background: rgba(122,162,255,0.12);
+}
+
+/* divider halus */
+.tag-suggest-item + .tag-suggest-item {
+  border-top: 1px solid var(--border-soft);
+}
+
+/* ===============================
+   DARK MODE POLISH
+   =============================== */
+
+[data-theme="dark"] .tag-suggest {
+  background: rgba(255,255,255,0.04);
+  box-shadow:
+    0 12px 32px rgba(0,0,0,.55),
+    inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+[data-theme="dark"] .tag-suggest-item:hover,
+[data-theme="dark"] .tag-suggest-item:active {
+  background: rgba(122,162,255,0.18);
+}
