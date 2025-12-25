@@ -201,15 +201,7 @@ if (themeBtn && window.toggleTheme) {
   const menuBtn   = document.querySelector(".menu-btn");
   const bottomNav = document.querySelector(".bottom-nav");
   const lfgFab    = document.querySelector(".lfg-fab");
-
-  /* 🔹 ADD-ON (SAFE) */
-  if (addFab) {
-  addFab.addEventListener("click", () => {
-    sessionStorage.setItem("editor:new", "1");
-    sessionStorage.removeItem("editNoteId");
-    loadPage("editor");
-  });
-}
+  const addFab    = document.querySelector(".add-fab");
 
   if (!drawer || !overlay || !menuBtn) return;
 
@@ -225,8 +217,6 @@ if (themeBtn && window.toggleTheme) {
 
     if (bottomNav) bottomNav.style.display = "none";
     if (lfgFab)    lfgFab.style.display = "none";
-
-    /* 🔹 ADD-ON */
     if (addFab)    addFab.style.display = "none";
   }
 
@@ -240,13 +230,21 @@ if (themeBtn && window.toggleTheme) {
 
     if (bottomNav) bottomNav.style.display = "";
     if (lfgFab)    lfgFab.style.display = "";
-
-    /* 🔹 ADD-ON */
     if (addFab)    addFab.style.display = "";
   }
 
+  // Drawer open / close
   menuBtn.addEventListener("click", openDrawer);
   overlay.addEventListener("click", closeDrawer);
+
+  // Add new note (clear editor)
+  if (addFab) {
+    addFab.addEventListener("click", () => {
+      sessionStorage.setItem("editor:new", "1");
+      sessionStorage.removeItem("editNoteId");
+      loadPage("editor");
+    });
+  }
 
   // Swipe edge (LEFT → RIGHT)
   let startX = 0;
@@ -262,21 +260,15 @@ if (themeBtn && window.toggleTheme) {
       openDrawer();
     }
   }, { passive: true });
-/* ===============================
-   DRAWER NAVIGATION (FINAL FIXED)
-   =============================== */
-drawer.querySelectorAll(".drawer-item[data-page]").forEach(item => {
-  item.addEventListener("click", () => {
-    const page = item.dataset.page;
-    if (!page) return;
 
-    // 1️⃣ Tutup drawer & unlock body
-    closeDrawer();
+  // Drawer navigation
+  drawer.querySelectorAll(".drawer-item[data-page]").forEach(item => {
+    item.addEventListener("click", () => {
+      const page = item.dataset.page;
+      if (!page) return;
 
-    // 2️⃣ Navigasi setelah drawer tertutup
-    setTimeout(() => {
-      loadPage(page);
-    }, 200);
+      closeDrawer();
+      setTimeout(() => loadPage(page), 200);
+    });
   });
-});
 })();

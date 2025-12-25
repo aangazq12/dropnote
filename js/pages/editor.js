@@ -275,7 +275,8 @@
       }
 
       window.dispatchEvent(new Event("notes:updated"));
-      loadPage("notes");
+history.replaceState({ page: "notes" }, "", "#notes");
+loadPage("notes", true);
     };
   }
 

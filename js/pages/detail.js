@@ -57,7 +57,8 @@
       );
 
       sessionStorage.removeItem("editNoteId");
-      loadPage("notes");
+history.replaceState({ page: "notes" }, "", "#notes");
+loadPage("notes", true);
     };
 
     /* ===============================
@@ -84,7 +85,8 @@ document.getElementById("deleteBtn").onclick = () => {
 
   // behavior existing (tetap)
   sessionStorage.removeItem("editNoteId");
-  loadPage("notes");
+history.replaceState({ page: "notes" }, "", "#notes");
+loadPage("notes", true);
 };
   }
 
