@@ -165,6 +165,7 @@ list.querySelectorAll(".delete-btn").forEach(btn => {
     addBtn.onclick = () => {
   sessionStorage.setItem("editor:new", "1");
   sessionStorage.removeItem("editNoteId");
+  localStorage.removeItem("dropnote_editor_draft");
   loadPage("editor");
 };
 

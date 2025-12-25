@@ -239,12 +239,13 @@ if (themeBtn && window.toggleTheme) {
 
   // Add new note (clear editor)
   if (addFab) {
-    addFab.addEventListener("click", () => {
-      sessionStorage.setItem("editor:new", "1");
-      sessionStorage.removeItem("editNoteId");
-      loadPage("editor");
-    });
-  }
+  addFab.addEventListener("click", () => {
+    sessionStorage.setItem("editor:new", "1");
+    sessionStorage.removeItem("editNoteId");
+    localStorage.removeItem("dropnote_editor_draft");
+    loadPage("editor");
+  });
+}
 
   // Swipe edge (LEFT → RIGHT)
   let startX = 0;
