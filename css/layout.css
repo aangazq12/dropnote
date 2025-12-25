@@ -1,95 +1,92 @@
 /* =========================
-   APP ROOT (SPA ISOLATION)
+   APP ROOT (SPA ROOT – FINAL)
    ========================= */
 #app {
   padding: 16px;
   padding-bottom: 80px;
-
   min-height: 100vh;
 
-  /* 🔒 SPA GLITCH FIX */
+  /* 🔒 SPA GLITCH FIX (ANDROID SAFE) */
   contain: layout style paint;
-
-  /* 🔹 Android/WebView polish (optional but safe) */
   backface-visibility: hidden;
   transform: translateZ(0);
 }
-  
-/* =========================  
-   PAGE WRAPPER  
-   ========================= */  
-.page {  
-  min-height: 100%;  
-}  
-  
-/* =========================  
-   GENERIC HEADER  
-   ========================= */  
-.header {  
-  display: flex;  
-  align-items: center;  
-  justify-content: space-between;  
-  gap: 12px;  
-}  
-  
-/* =========================  
-   BOTTOM NAVIGATION  
-   ========================= */  
-.bottom-nav {  
-  position: fixed;  
-  bottom: 0;  
-  left: 0;  
-  right: 0;  
 
-  height: 56px;  
-  display: flex;  
-  z-index: 100;  
-
-  background: var(--nav-bg);  
-  border-top: 1px solid var(--border-soft);  
-
-  backdrop-filter: blur(6px);  
-  -webkit-backdrop-filter: blur(6px);  
-}  
-
-.bottom-nav button {  
-  flex: 1;  
-  border: none;  
-  background: none;  
-
-  font-size: 14px;  
-  color: var(--nav-text);  
-}  
-
-.bottom-nav button.active {  
-  color: var(--nav-text-active);  
-  font-weight: 600;  
+/* =========================
+   PAGE WRAPPER
+   ========================= */
+.page {
+  min-height: 100%;
 }
-/* =========================  
-   HEADER SPACER (RIGHT SLOT)  
-   ========================= */  
-.header-spacer {  
-  width: 24px;  
-}  
-  
-/* =========================  
-   SAVE BAR (EDITOR)  
-   ========================= */  
-.save-bar {  
-  position: fixed;  
-  bottom: 64px; /* above bottom nav */  
-  left: 16px;  
-  right: 16px;  
-  z-index: 90;  
-}  
-  
-/* =========================  
-   DETAIL ACTIONS  
-   ========================= */  
-.detail-actions {  
-  display: flex;  
-  gap: 8px;  
-  margin-top: 16px;  
+
+/* =========================
+   GENERIC HEADER
+   ========================= */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* =========================
+   BOTTOM NAVIGATION
+   ========================= */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  height: 56px;
+  display: flex;
+  z-index: 100;
+
+  background: var(--nav-bg);
+  border-top: 1px solid var(--border-soft);
+
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.bottom-nav button {
+  flex: 1;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: var(--nav-text);
+}
+
+.bottom-nav button.active {
+  color: var(--nav-text-active);
+  font-weight: 600;
+}
+
+/* =========================
+   HEADER SPACER
+   ========================= */
+.header-spacer {
+  width: 24px;
+}
+
+/* =========================
+   SAVE BAR (EDITOR)
+   ========================= */
+.save-bar {
+  position: fixed;
+  bottom: 64px;
+  left: 16px;
+  right: 16px;
+  z-index: 90;
+}
+
+/* =========================
+   DETAIL ACTIONS
+   ========================= */
+.detail-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 16px;
 }
 
 /* =========================
@@ -98,7 +95,7 @@
 .install-btn {
   position: fixed;
   right: 16px;
-  bottom: 96px; /* aman di atas bottom-nav + FAB */
+  bottom: 96px;
 
   padding: 12px 16px;
   border-radius: 16px;
@@ -121,18 +118,13 @@
   z-index: 120;
   cursor: pointer;
 
-  transition:
-    transform .15s ease,
-    opacity .15s ease;
+  transition: transform .15s ease, opacity .15s ease;
 }
 
-/* tap feedback */
 .install-btn:active {
   transform: scale(.96);
 }
 
-/* hidden default */
 .install-btn.is-hidden {
   display: none;
 }
-
