@@ -85,12 +85,3 @@ a {
 #app {
   will-change: opacity;
 }
-
-/* =========================
-   BOTTOM NAV (KEYBOARD SAFE)
-   ========================= */
-.bottom-nav.hide-on-keyboard {
-  transform: translateY(100%);
-  transition: transform 0.2s ease;
-}
-
