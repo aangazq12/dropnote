@@ -63,13 +63,12 @@ a {
 }
 
 /* =========================
-   SPA RENDER GUARD
+   SPA RENDER GUARD (ANDROID SAFE)
    ========================= */
 #app.loading {
-  opacity: 0;
+  visibility: hidden;
 }
 
 #app.ready {
-  opacity: 1;
-  transition: opacity 0.08s linear;
+  visibility: visible;
 }

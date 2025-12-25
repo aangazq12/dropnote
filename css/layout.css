@@ -5,11 +5,6 @@
   padding: 16px;
   padding-bottom: 80px;
   min-height: 100vh;
-
-  /* 🔒 SPA GLITCH FIX (ANDROID SAFE) */
-  contain: layout style paint;
-  backface-visibility: hidden;
-  transform: translateZ(0);
 }
 
 /* =========================
