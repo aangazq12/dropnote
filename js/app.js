@@ -169,27 +169,27 @@ window.addEventListener("appinstalled", () => {
 });
 
 /* =================================================
-   DOUBLE BACK TO EXIT (ANDROID STYLE)
+   DOUBLE BACK TO EXIT (ANDROID STYLE) — FIXED
    ================================================= */
 let lastBackTime = 0;
 
 window.addEventListener("popstate", (e) => {
-  const page = e.state?.page || "home";
 
-  // 🔒 kalau bukan home → normal behavior
-  if (page !== "home") {
+  // ✅ kalau BUKAN di home → normal back
+  if (currentPage !== "home") {
+    const page = e.state?.page || "home";
     loadPage(page, true);
     return;
   }
 
+  // ✅ hanya HOME yang pakai double-back
   const now = Date.now();
 
-  // ⏱️ back kedua dalam 2 detik → exit
   if (now - lastBackTime < 2000) {
     // Android PWA / Browser
     window.close();
 
-    // fallback (browser biasa)
+    // fallback browser biasa
     history.go(-2);
     return;
   }
@@ -198,6 +198,6 @@ window.addEventListener("popstate", (e) => {
   lastBackTime = now;
   showToast("Tekan sekali lagi untuk keluar", 1600);
 
-  // stay di home (jangan pindah page)
+  // tetap di home
   history.replaceState({ page: "home" }, "", "#home");
 });
