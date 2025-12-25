@@ -244,7 +244,7 @@ if (themeBtn && window.toggleTheme) {
     sessionStorage.removeItem("editNoteId");
     localStorage.removeItem("dropnote_editor_draft");
     history.replaceState({ page: "home" }, "", "#home");
-loadPage("editor");
+     loadPage("editor", true);
   });
 }
 
