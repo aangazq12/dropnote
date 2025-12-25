@@ -3,10 +3,6 @@
    DropNote v1.1.x (LOCK SAFE)
    =============================== */
 
-.settings-page {
-  padding-bottom: 80px;
-}
-
 /* ===============================
    HEADER
    =============================== */
@@ -154,16 +150,6 @@
 }
 
 /* ===============================
-   SCROLL FIX — SETTINGS PAGE
-   =============================== */
-
-.settings-page {
-  min-height: 100vh;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ===============================
    BACK BUTTON — PREMIUM CALM
    =============================== */
 
@@ -197,17 +183,32 @@
 /* ===============================
    SCROLL FIX — REAL FIX (DROP NOTE)
    =============================== */
-
-.settings-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
 .settings-header {
   flex-shrink: 0;
 }
 
+.settings-content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 120px; /* aman dari bottom nav */
+}
+
+/* ===============================
+   SETTINGS PAGE — SPA SAFE (FINAL)
+   =============================== */
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+/* header fixed */
+.settings-header {
+  flex-shrink: 0;
+}
+
+/* only ONE scroll container */
 .settings-content {
   flex: 1;
   overflow-y: auto;
