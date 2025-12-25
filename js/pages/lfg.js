@@ -6,9 +6,24 @@
   const searchEl = document.getElementById("lfgSearch");
   const titleEl = document.getElementById("lfgTitle");
   const bottomNav = document.querySelector(".bottom-nav");
+/* ===============================
+   LFG PAGE LIFECYCLE (SPA SAFE)
+   =============================== */
 
-  // HIDE BOTTOM NAV SAAT MASUK LFG
-  if (bottomNav) bottomNav.style.display = "none";
+// HIDE bottom nav saat LFG aktif
+if (bottomNav) {
+  bottomNav.style.display = "none";
+}
+
+// RESTORE bottom nav saat keluar page
+function cleanupLFG() {
+  if (bottomNav) {
+    bottomNav.style.display = "";
+  }
+}
+
+// SPA cleanup hook
+window.addEventListener("page:leave", cleanupLFG, { once: true });
 
   let activeTag = "fcfs";
   const copiedRows = {}; // runtime only
@@ -65,13 +80,6 @@
     }
   }
 
-  /* ===============================
-     EXIT LFG (ADD ONLY)
-     =============================== */
-  function exitLFG(){
-    if (bottomNav) bottomNav.style.display = "";
-    loadPage("home");
-  }
 
   /* ===============================
      RENDER (LOCKED)
@@ -186,8 +194,10 @@
     let holdTimer = null;
 
     const startHold = () => {
-      holdTimer = setTimeout(exitLFG, 600);
-    };
+  holdTimer = setTimeout(() => {
+    loadPage("home");
+  }, 600);
+};
     const endHold = () => {
       if (holdTimer) clearTimeout(holdTimer);
       holdTimer = null;
