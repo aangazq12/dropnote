@@ -18,10 +18,10 @@ const DEFAULT_SETTINGS = {
   },
 
   editor: {
-    autofocus: true,
-    autosave: true,
-    defaultWallet: ""
-  },
+  autofocus: false,
+  autosave: false,
+  defaultWallet: ""
+},
 
   notes: {
     sort: "newest",       // newest | oldest
