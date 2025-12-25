@@ -75,6 +75,16 @@ a {
 
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+body {
   -webkit-user-select: none;
   user-select: none;
+}
+
+.editor-card textarea,
+input,
+textarea {
+  -webkit-user-select: text;
+  user-select: text;
 }
