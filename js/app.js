@@ -58,11 +58,13 @@ window.loadPage = function (page, fromPop = false) {
     .then(html => {
       app.innerHTML = html;
 
-      // render after one frame
-      requestAnimationFrame(() => {
-        app.classList.remove("loading");
-        app.classList.add("ready");
-      });
+// tunggu CSS + layout stabil
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    app.classList.remove("loading");
+    app.classList.add("ready");
+  });
+});
 
       // remove old page scripts
       document

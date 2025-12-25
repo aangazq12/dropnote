@@ -1,10 +1,19 @@
-/* =========================  
-   APP ROOT  
-   ========================= */  
-#app {  
-  padding: 16px;  
-  padding-bottom: 80px; /* space for bottom nav */  
-}  
+/* =========================
+   APP ROOT (SPA ISOLATION)
+   ========================= */
+#app {
+  padding: 16px;
+  padding-bottom: 80px;
+
+  min-height: 100vh;
+
+  /* 🔒 SPA GLITCH FIX */
+  contain: layout style paint;
+
+  /* 🔹 Android/WebView polish (optional but safe) */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
   
 /* =========================  
    PAGE WRAPPER  
