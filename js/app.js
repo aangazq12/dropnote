@@ -165,3 +165,37 @@ window.addEventListener("appinstalled", () => {
     installBtn.classList.add("is-hidden");
   }
 });
+
+/* =================================================
+   DOUBLE BACK TO EXIT (ANDROID STYLE)
+   ================================================= */
+let lastBackTime = 0;
+
+window.addEventListener("popstate", (e) => {
+  const page = e.state?.page || "home";
+
+  // 🔒 kalau bukan home → normal behavior
+  if (page !== "home") {
+    loadPage(page, true);
+    return;
+  }
+
+  const now = Date.now();
+
+  // ⏱️ back kedua dalam 2 detik → exit
+  if (now - lastBackTime < 2000) {
+    // Android PWA / Browser
+    window.close();
+
+    // fallback (browser biasa)
+    history.go(-2);
+    return;
+  }
+
+  // back pertama → toast
+  lastBackTime = now;
+  showToast("Tekan sekali lagi untuk keluar", 1600);
+
+  // stay di home (jangan pindah page)
+  history.replaceState({ page: "home" }, "", "#home");
+});
