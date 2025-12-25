@@ -141,26 +141,27 @@ window.addEventListener("page:leave", cleanupLFG, { once: true });
             row.classList.add("copied");
 
           row.onclick = () => {
-            navigator.clipboard.writeText(r.value);
+  navigator.clipboard.writeText(r.value);
 
-            // FLASH + COPIED
-            row.classList.add("flash","copied");
-            setTimeout(()=>row.classList.remove("flash"),350);
+  // FLASH + COPIED
+  row.classList.add("flash","copied");
+  setTimeout(()=>row.classList.remove("flash"),350);
 
-            copiedRows[note.id].add(r.label);
+  copiedRows[note.id].add(r.label);
 
-            // NEXT ROW HINT
-            card.querySelectorAll(".lfg-row.next")
-              .forEach(el=>el.classList.remove("next"));
+  // NEXT ROW HINT
+  card.querySelectorAll(".lfg-row.next")
+    .forEach(el=>el.classList.remove("next"));
 
-            const next = row.nextElementSibling;
-            if(next && next.classList.contains("lfg-row"))
-              next.classList.add("next");
+  const next = row.nextElementSibling;
+  if(next && next.classList.contains("lfg-row"))
+    next.classList.add("next");
 
-            // CARD DONE
-            if(copiedRows[note.id].size === rows.length)
-              card.classList.add("done");
-          };
+  // CARD DONE — LANGSUNG DI COPY PERTAMA
+  if (!card.classList.contains("done")) {
+    card.classList.add("done");
+  }
+};
 
           card.appendChild(row);
         });
@@ -173,9 +174,6 @@ window.addEventListener("page:leave", cleanupLFG, { once: true });
         n.textContent=noteText;
         card.appendChild(n);
       }
-
-      if(copiedRows[note.id].size === rows.length)
-        card.classList.add("done");
 
       listEl.appendChild(card);
     });
