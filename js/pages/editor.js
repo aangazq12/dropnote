@@ -318,20 +318,25 @@ loadPage("notes", true);
 })();
 
 /* ===============================
-   FLOATING SAVE — FINAL ABSOLUTE
-   IME SAFE • CHROME SAFE • LEGACY SAFE
+   FLOATING SAVE — FINAL (ANTI CRASH)
    =============================== */
 
 (() => {
+  let initialized = false;
+
   const wait = () => {
+    if (initialized) return;
+
     const legacySave = document.getElementById("saveBtn");
     const floatingSave = document.getElementById("editor-save-btn");
 
+    // 🛑 Guard mutlak
     if (!legacySave || !floatingSave) {
       requestAnimationFrame(wait);
       return;
     }
 
+    initialized = true;
     initFloatingSave(legacySave, floatingSave);
   };
 
@@ -345,9 +350,6 @@ loadPage("notes", true);
 
     let dirty = false;
 
-    /* ===============================
-       DIRTY DETECTION (IME SAFE)
-       =============================== */
     fields.forEach(el => {
       const markDirty = () => {
         dirty = true;
@@ -355,33 +357,28 @@ loadPage("notes", true);
       };
 
       el.addEventListener("input", markDirty);
-      el.addEventListener("compositionend", markDirty); // Android IME
+      el.addEventListener("compositionend", markDirty);
     });
 
-    /* ===============================
-       SAVE TRIGGER (LEGACY SAFE)
-       =============================== */
     floatingSave.addEventListener("click", () => {
       if (!dirty) return;
-
-      // 🔥 trigger save lama TANPA sentuh logic
       legacySave.click();
-
       dirty = false;
       feedback();
     });
 
-    /* ===============================
-       VISIBILITY
-       =============================== */
     function show() {
+      if (!floatingSave) return;
       floatingSave.hidden = false;
       floatingSave.classList.add("is-visible");
     }
 
     function hide() {
+      if (!floatingSave) return;
       floatingSave.classList.remove("is-visible");
-      setTimeout(() => (floatingSave.hidden = true), 180);
+      setTimeout(() => {
+        if (floatingSave) floatingSave.hidden = true;
+      }, 180);
     }
 
     function feedback() {
@@ -394,38 +391,6 @@ loadPage("notes", true);
         hide();
       }, 700);
     }
-
-    /* ===============================
-       CHROME ANDROID KEYBOARD FIX
-       =============================== */
-    if (window.visualViewport) {
-      const vv = window.visualViewport;
-
-      const updateOffset = () => {
-        const keyboardHeight =
-          window.innerHeight - vv.height - vv.offsetTop;
-
-        if (keyboardHeight > 0) {
-          floatingSave.style.bottom =
-            `calc(${keyboardHeight + 8}px + env(safe-area-inset-bottom))`;
-        } else {
-          floatingSave.style.bottom =
-            `calc(8px + env(safe-area-inset-bottom))`;
-        }
-      };
-
-      vv.addEventListener("resize", updateOffset);
-      vv.addEventListener("scroll", updateOffset);
-    }
-
-    /* ===============================
-       HIDE WHEN LEAVING EDITOR
-       =============================== */
-    document.addEventListener("focusout", () => {
-      if (!document.activeElement?.closest(".editor-body")) {
-        hide();
-      }
-    });
   }
 
   wait();
