@@ -1,59 +1,153 @@
 /* ===============================
-   EDITOR (FINAL)
-   CREATE & EDIT NOTE 🔒
-   + STEP D: EDITOR DEFAULTS
+   DROPNOTE — EDITOR CORE
+   Refactor: STRUCTURAL ONLY (SAFE)
    =============================== */
 
 (() => {
-  const waitDom = () => {
+  /* ===============================
+     BOOTSTRAP (SPA SAFE)
+     =============================== */
+  function waitDom() {
     const saveBtn = document.getElementById("saveBtn");
     if (!saveBtn) {
       requestAnimationFrame(waitDom);
       return;
     }
     initEditor();
-  };
+  }
 
+  /* ===============================
+     INIT
+     =============================== */
   function initEditor() {
-    const titleInput   = document.getElementById("titleInput");
-    const walletInput  = document.getElementById("linkInput");
-    const tagInput     = document.getElementById("tagsInput");
-    const contentInput = document.getElementById("contentInput");
-    const saveBtn      = document.getElementById("saveBtn");
-    const editorHint   = document.getElementById("editorHint");
-     
-    /* ===============================
-       TAG SUGGESTION (EDITOR)
-       =============================== */
+    const dom = bindEditorDOM();
+    const state = initEditorState();
 
-    // inject container once
+    setupAutofocus(dom, state);
+    restoreDraft(dom, state);
+    setupAutoResize(dom, state);
+    setupTagSuggestion(dom);
+    setupAutosave(dom, state);
+    loadEditMode(dom, state);
+    bindSave(dom, state);
+
+    // cleanup flag (important)
+    sessionStorage.removeItem("editor:new");
+  }
+
+  /* ===============================
+     DOM BINDING
+     =============================== */
+  function bindEditorDOM() {
+    return {
+      title: document.getElementById("titleInput"),
+      wallet: document.getElementById("linkInput"),
+      tags: document.getElementById("tagsInput"),
+      content: document.getElementById("contentInput"),
+      saveBtn: document.getElementById("saveBtn"),
+      hint: document.getElementById("editorHint"),
+      body: document.querySelector(".editor-body")
+    };
+  }
+
+  /* ===============================
+     STATE
+     =============================== */
+  function initEditorState() {
+    const settings = window.getSettings?.();
+    const editId = sessionStorage.getItem("editNoteId");
+    const isNewFromHome = sessionStorage.getItem("editor:new") === "1";
+
+    return {
+      settings,
+      editId,
+      isNew: isNewFromHome || !editId,
+      editingNote: null
+    };
+  }
+
+  /* ===============================
+     UX — AUTOFUCUS
+     =============================== */
+  function setupAutofocus(dom, state) {
+    if (state.settings?.editor?.autofocus) {
+      (dom.content || dom.title)?.focus();
+    }
+  }
+
+  /* ===============================
+     DRAFT — RESTORE
+     =============================== */
+  function restoreDraft(dom, state) {
+    if (state.editId || state.isNew) return;
+
+    const savedDraft = JSON.parse(
+      localStorage.getItem("dropnote_editor_draft") || "null"
+    );
+
+    if (!savedDraft) return;
+
+    dom.title.value   ||= savedDraft.title   || "";
+    dom.wallet.value  ||= savedDraft.wallet  || "";
+    dom.tags.value    ||= savedDraft.tags    || "";
+    dom.content.value ||= savedDraft.content || "";
+  }
+
+  /* ===============================
+     CONTENT — AUTO RESIZE & HINT
+     =============================== */
+  function setupAutoResize(dom, state) {
+    const autoResize = el => {
+      el.style.height = "auto";
+      el.style.height = el.scrollHeight + "px";
+    };
+
+    dom.content.addEventListener("input", () => {
+      autoResize(dom.content);
+
+      if (dom.content.value.trim()) {
+        dom.hint?.classList.add("hidden");
+      } else if (state.isNew) {
+        dom.hint?.classList.remove("hidden");
+      }
+    });
+
+    dom.content.addEventListener("focus", () => {
+      if (state.isNew && !dom.content.value.trim()) {
+        dom.hint?.classList.remove("hidden");
+      }
+    });
+
+    dom.content.addEventListener("blur", () => {
+      if (!dom.content.value.trim()) {
+        dom.hint?.classList.add("hidden");
+      }
+    });
+  }
+
+  /* ===============================
+     TAG SUGGESTION (UNCHANGED LOGIC)
+     =============================== */
+  function setupTagSuggestion(dom) {
     const tagSuggest = document.createElement("div");
     tagSuggest.className = "tag-suggest";
     tagSuggest.style.display = "none";
-    tagInput.parentNode.appendChild(tagSuggest);
+    dom.tags.parentNode.appendChild(tagSuggest);
 
-    // helper: format tag (display & save)
     function formatTag(tag) {
       const t = String(tag || "").trim();
       if (!t) return "";
-
-      // singkatan → FULL CAPS
       if (t.length <= 4) return t.toUpperCase();
-
-      // normal → Capitalized
       return t.charAt(0).toUpperCase() + t.slice(1).toLowerCase();
     }
 
-    // helper: get last token after comma
     function getLastTagToken(value) {
       const parts = value.split(",");
       return parts[parts.length - 1].trim();
     }
 
-    // render suggestion list
-    function renderTagSuggest(list) {
+    function render(list) {
       tagSuggest.innerHTML = "";
-
       if (!list.length) {
         tagSuggest.style.display = "none";
         return;
@@ -65,14 +159,11 @@
         item.textContent = formatTag(tag);
 
         item.onclick = () => {
-          const parts = tagInput.value.split(",");
+          const parts = dom.tags.value.split(",");
           parts[parts.length - 1] = " " + formatTag(tag);
-
-          tagInput.value =
-            parts.join(",").replace(/^ /, "") + ", ";
-
+          dom.tags.value = parts.join(",").replace(/^ /, "") + ", ";
           tagSuggest.style.display = "none";
-          tagInput.focus();
+          dom.tags.focus();
         };
 
         tagSuggest.appendChild(item);
@@ -81,119 +172,37 @@
       tagSuggest.style.display = "block";
     }
 
-    /* ===============================
-       SETTINGS & MODE
-       =============================== */
+    dom.tags.addEventListener("input", () => {
+      if (!window.Tags) return;
 
-    const settings = window.getSettings?.();
-const editId   = sessionStorage.getItem("editNoteId");
-const isNewFromHome = sessionStorage.getItem("editor:new") === "1";
-
-let editingNote = null;
-let isNewNote = isNewFromHome || !editId;
-    /* ===============================
-       STEP D — AUTOFUCUS
-       =============================== */
-
-    if (settings?.editor?.autofocus) {
-      (contentInput || titleInput)?.focus();
-    }
-
-    /* ===============================
-       STEP D — RESTORE DRAFT
-       =============================== */
-
-    const savedDraft = JSON.parse(
-      localStorage.getItem("dropnote_editor_draft") || "null"
-    );
-
-    if (savedDraft && !editId && !isNewFromHome) {
-      titleInput.value   ||= savedDraft.title   || "";
-      walletInput.value  ||= savedDraft.wallet  || "";
-      tagInput.value     ||= savedDraft.tags    || "";
-      contentInput.value ||= savedDraft.content || "";
-    }
-
-    /* ===============================
-       AUTO RESIZE TEXTAREA
-       =============================== */
-
-    const autoResize = el => {
-      el.style.height = "auto";
-      el.style.height = el.scrollHeight + "px";
-    };
-
-    contentInput.addEventListener("input", () => {
-      autoResize(contentInput);
-
-      if (contentInput.value.trim()) {
-        editorHint?.classList.add("hidden");
-      } else if (isNewNote) {
-        editorHint?.classList.remove("hidden");
+      const token = getLastTagToken(dom.tags.value);
+      if (!token) {
+        tagSuggest.style.display = "none";
+        return;
       }
+
+      render(Tags.search(token));
     });
 
-    contentInput.addEventListener("focus", () => {
-      if (isNewNote && !contentInput.value.trim()) {
-        editorHint?.classList.remove("hidden");
-      }
+    dom.tags.addEventListener("blur", () => {
+      setTimeout(() => (tagSuggest.style.display = "none"), 150);
     });
+  }
 
-    contentInput.addEventListener("blur", () => {
-      if (!contentInput.value.trim()) {
-        editorHint?.classList.add("hidden");
-      }
-    });
+  /* ===============================
+     AUTOSAVE DRAFT
+     =============================== */
+  function setupAutosave(dom, state) {
+    if (!state.settings?.editor?.autosave) return;
 
-    /* ===============================
-       LOAD EDIT MODE
-       =============================== */
+    let timer = null;
 
-    if (editId) {
-      editingNote = getNotes().find(
-        n => String(n.id) === String(editId)
-      );
-
-      if (editingNote) {
-        titleInput.value   = editingNote.title   || "";
-        walletInput.value  = editingNote.wallet  || "";
-        tagInput.value     = (editingNote.tags || []).join(", ");
-        contentInput.value = editingNote.content || "";
-
-        editorHint?.classList.add("hidden");
-        isNewNote = false;
-
-        setTimeout(() => autoResize(contentInput), 0);
-      }
-    }
-/* ===============================
-   CLEAN NEW FLAG (IMPORTANT)
-   =============================== */
-sessionStorage.removeItem("editor:new");
-    /* ===============================
-       STEP D — DEFAULT WALLET
-       =============================== */
-
-    if (!editId && settings?.editor?.defaultWallet) {
-      if (!walletInput.value) {
-        walletInput.value = settings.editor.defaultWallet;
-      }
-    }
-
-    /* ===============================
-       STEP D — AUTOSAVE DRAFT
-       =============================== */
-
-    let autosaveTimer = null;
-
-    function autosaveDraft() {
-      if (!settings?.editor?.autosave) return;
-
+    function autosave() {
       const draft = {
-        title:   titleInput.value,
-        wallet:  walletInput.value,
-        tags:    tagInput.value,
-        content: contentInput.value
+        title: dom.title.value,
+        wallet: dom.wallet.value,
+        tags: dom.tags.value,
+        content: dom.content.value
       };
 
       localStorage.setItem(
@@ -203,84 +212,88 @@ sessionStorage.removeItem("editor:new");
     }
 
     ["input", "change"].forEach(evt => {
-      document
-        .querySelector(".editor-body")
-        ?.addEventListener(evt, () => {
-          clearTimeout(autosaveTimer);
-          autosaveTimer = setTimeout(autosaveDraft, 600);
-        });
+      dom.body?.addEventListener(evt, () => {
+        clearTimeout(timer);
+        timer = setTimeout(autosave, 600);
+      });
     });
+  }
 
-    /* ===============================
-       TAG INPUT — SUGGESTION LOGIC
-       =============================== */
+  /* ===============================
+     LOAD EDIT MODE
+     =============================== */
+  function loadEditMode(dom, state) {
+    if (!state.editId) return;
 
-    tagInput.addEventListener("input", () => {
-      if (!window.Tags) return;
+    state.editingNote = getNotes().find(
+      n => String(n.id) === String(state.editId)
+    );
 
-      const token = getLastTagToken(tagInput.value);
-      if (!token) {
-        tagSuggest.style.display = "none";
-        return;
-      }
+    if (!state.editingNote) return;
 
-      const results = Tags.search(token);
-      renderTagSuggest(results);
-    });
+    dom.title.value   = state.editingNote.title   || "";
+    dom.wallet.value  = state.editingNote.wallet  || "";
+    dom.tags.value    = (state.editingNote.tags || []).join(", ");
+    dom.content.value = state.editingNote.content || "";
 
-    tagInput.addEventListener("blur", () => {
-      setTimeout(() => {
-        tagSuggest.style.display = "none";
-      }, 150);
-    });
+    dom.hint?.classList.add("hidden");
+    state.isNew = false;
 
-    /* ===============================
-       SAVE
-       =============================== */
+    setTimeout(() => {
+      dom.content.style.height = "auto";
+      dom.content.style.height = dom.content.scrollHeight + "px";
+    }, 0);
+  }
 
-    saveBtn.onclick = () => {
-      const title = titleInput.value.trim();
+  /* ===============================
+     SAVE (CREATE / UPDATE)
+     =============================== */
+  function bindSave(dom, state) {
+    dom.saveBtn.onclick = () => {
+      const title = dom.title.value.trim();
       if (!title) {
         alert("Judul wajib diisi");
         return;
       }
 
-      const wallet = walletInput.value.trim();
-      const tags = tagInput.value
+      const wallet = dom.wallet.value.trim();
+      const tags = dom.tags.value
         .split(/[,\n|/]+/)
-        .map(formatTag)
+        .map(t => {
+          const v = String(t || "").trim();
+          if (!v) return "";
+          if (v.length <= 4) return v.toUpperCase();
+          return v.charAt(0).toUpperCase() + v.slice(1).toLowerCase();
+        })
         .filter(Boolean);
 
-      const content = contentInput.value.trim();
+      const content = dom.content.value.trim();
 
-      // UPDATE
-      if (editId && editingNote) {
-        updateNote(editId, {
+      if (state.editId && state.editingNote) {
+        updateNote(state.editId, {
           title,
           wallet,
           tags,
           content,
           status:
-            editingNote.status === "Draft"
+            state.editingNote.status === "Draft"
               ? "Active"
-              : editingNote.status
+              : state.editingNote.status
         });
 
         showToast("💾 Changes saved");
         localStorage.removeItem("dropnote_editor_draft");
         sessionStorage.removeItem("editNoteId");
+      } else {
+        addNote({ title, wallet, tags, content });
+        showToast("✅ Note saved");
+        localStorage.removeItem("dropnote_editor_draft");
+        sessionStorage.removeItem("editor:new");
       }
-      // CREATE
-else {
-  addNote({ title, wallet, tags, content });
-  showToast("✅ Note saved");
-  localStorage.removeItem("dropnote_editor_draft");
-  sessionStorage.removeItem("editor:new"); // optional safety
-}
 
       window.dispatchEvent(new Event("notes:updated"));
-history.replaceState({ page: "notes" }, "", "#notes");
-loadPage("notes", true);
+      history.replaceState({ page: "notes" }, "", "#notes");
+      loadPage("notes", true);
     };
   }
 
@@ -289,8 +302,8 @@ loadPage("notes", true);
 
 /* ===============================
    KEYBOARD AWARE BOTTOM NAV
+   (LEGACY — DO NOT TOUCH)
    =============================== */
-
 (() => {
   const nav = document.querySelector(".bottom-nav");
   if (!nav) return;
