@@ -1,4 +1,3 @@
-
 <section class="editor-page page">
 
   <!-- HEADER -->
@@ -33,8 +32,9 @@
         placeholder="airdrop, testnet, zk"
       />
     </label>
-    <!-- TAG SUGGESTIONS (helper, text only) -->
-<div id="tagSuggestions" class="tag-suggestions" hidden></div>
+
+    <!-- TAG SUGGESTIONS -->
+    <div id="tagSuggestions" class="tag-suggestions" hidden></div>
 
     <!-- EDITOR CARD -->
     <div class="editor-card" id="editorCard">
@@ -52,9 +52,13 @@
 
   </div>
 
-  <!-- SAVE BAR -->
-  <div class="save-bar">
-    <button id="saveBtn" type="button">Save</button>
-  </div>
+  <!-- FLOATING SAVE BUTTON (ABOVE KEYBOARD) -->
+  <button
+  id="editor-save-btn"
+  class="editor-save-btn"
+  type="button"
+  hidden>
+  Save
+</button>
 
 </section>

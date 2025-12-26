@@ -316,3 +316,117 @@ loadPage("notes", true);
     nav.classList.remove("hide-on-keyboard");
   });
 })();
+
+/* ===============================
+   FLOATING SAVE — FINAL ABSOLUTE
+   IME SAFE • CHROME SAFE • LEGACY SAFE
+   =============================== */
+
+(() => {
+  const wait = () => {
+    const legacySave = document.getElementById("saveBtn");
+    const floatingSave = document.getElementById("editor-save-btn");
+
+    if (!legacySave || !floatingSave) {
+      requestAnimationFrame(wait);
+      return;
+    }
+
+    initFloatingSave(legacySave, floatingSave);
+  };
+
+  function initFloatingSave(legacySave, floatingSave) {
+    const fields = [
+      "titleInput",
+      "linkInput",
+      "tagsInput",
+      "contentInput"
+    ].map(id => document.getElementById(id)).filter(Boolean);
+
+    let dirty = false;
+
+    /* ===============================
+       DIRTY DETECTION (IME SAFE)
+       =============================== */
+    fields.forEach(el => {
+      const markDirty = () => {
+        dirty = true;
+        show();
+      };
+
+      el.addEventListener("input", markDirty);
+      el.addEventListener("compositionend", markDirty); // Android IME
+    });
+
+    /* ===============================
+       SAVE TRIGGER (LEGACY SAFE)
+       =============================== */
+    floatingSave.addEventListener("click", () => {
+      if (!dirty) return;
+
+      // 🔥 trigger save lama TANPA sentuh logic
+      legacySave.click();
+
+      dirty = false;
+      feedback();
+    });
+
+    /* ===============================
+       VISIBILITY
+       =============================== */
+    function show() {
+      floatingSave.hidden = false;
+      floatingSave.classList.add("is-visible");
+    }
+
+    function hide() {
+      floatingSave.classList.remove("is-visible");
+      setTimeout(() => (floatingSave.hidden = true), 180);
+    }
+
+    function feedback() {
+      floatingSave.textContent = "Saved ✓";
+      floatingSave.classList.add("is-saved");
+
+      setTimeout(() => {
+        floatingSave.textContent = "Save";
+        floatingSave.classList.remove("is-saved");
+        hide();
+      }, 700);
+    }
+
+    /* ===============================
+       CHROME ANDROID KEYBOARD FIX
+       =============================== */
+    if (window.visualViewport) {
+      const vv = window.visualViewport;
+
+      const updateOffset = () => {
+        const keyboardHeight =
+          window.innerHeight - vv.height - vv.offsetTop;
+
+        if (keyboardHeight > 0) {
+          floatingSave.style.bottom =
+            `calc(${keyboardHeight + 8}px + env(safe-area-inset-bottom))`;
+        } else {
+          floatingSave.style.bottom =
+            `calc(8px + env(safe-area-inset-bottom))`;
+        }
+      };
+
+      vv.addEventListener("resize", updateOffset);
+      vv.addEventListener("scroll", updateOffset);
+    }
+
+    /* ===============================
+       HIDE WHEN LEAVING EDITOR
+       =============================== */
+    document.addEventListener("focusout", () => {
+      if (!document.activeElement?.closest(".editor-body")) {
+        hide();
+      }
+    });
+  }
+
+  wait();
+})();
