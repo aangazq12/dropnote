@@ -13,7 +13,7 @@
     "faucet":       { label: "Faucet",       icon: "🚰" },
     "social task":  { label: "Social Task",  icon: "👥" },
     "testnet":      { label: "Testnet",      icon: "🧪" },
-    "daily task":   { label: "Daily Task",   icon: "📅" },
+    "daily":   { label: "Daily Task",   icon: "📅" },
     "retro":        { label: "Retro",        icon: "🕰️" },
     "node":         { label: "Node",         icon: "🖥️" },
     "ido":          { label: "IDO",          icon: "🚀" },
