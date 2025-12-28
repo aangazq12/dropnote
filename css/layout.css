@@ -178,18 +178,26 @@
   display: none;
 }
 
-/* =========================================
-   BOTTOM NAV SPACING FIX (APPEND ONLY)
-   ========================================= */
+/* =================================================
+   BOTTOM NAV — NO PRIMARY (+) STATE
+   When center action is hidden
+   ================================================= */
+
+/* jika tombol + tidak ada / hidden */
+.bottom-nav:not(:has(.nav-primary:not([style*="display: none"]))) {
+  grid-template-columns: 1fr 1fr;
+}
 
 /* kiri (home) */
-.bottom-nav .nav-item:first-child {
+.bottom-nav:not(:has(.nav-primary:not([style*="display: none"])))
+  .nav-item:first-child {
   justify-content: flex-start;
-  padding-left: 20px;
+  padding-left: 24px;
 }
 
 /* kanan (notes) */
-.bottom-nav .nav-item:last-child {
+.bottom-nav:not(:has(.nav-primary:not([style*="display: none"])))
+  .nav-item:last-child {
   justify-content: flex-end;
-  padding-right: 20px;
+  padding-right: 24px;
 }
