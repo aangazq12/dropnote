@@ -169,13 +169,13 @@
   background: var(--drawer-bg);
   color: var(--text);
   box-shadow:
-    0 10px 28px rgba(0,0,0,.55),
+    0 14px 36px rgba(0,0,0,.7),
     inset 0 0 0 1px var(--border-soft);
 }
 
 /* header LFG (🔥 LFG + tag) */
 [data-theme="dark"] .lfg-header {
-  background: rgba(255,255,255,.03);
+  background: rgba(255,255,255,.06);
   border-bottom: 1px solid var(--border-soft);
 }
 
@@ -192,7 +192,7 @@
 /* row / field */
 [data-theme="dark"] .lfg-row,
 [data-theme="dark"] .lfg-field {
-  background: rgba(255,255,255,.03);
+  background: rgba(255,255,255,.05);
   border: 1px solid var(--border-soft);
 }
 
