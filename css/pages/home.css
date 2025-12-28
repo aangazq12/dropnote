@@ -234,42 +234,6 @@
   cursor: pointer;
   z-index: 9999;
 }
-/* =========================
-   ADD EDITOR FAB
-   ========================= */
-.add-fab {
-  position: fixed;
-  left: 16px;
-  bottom: 76px;
-
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-
-  background: var(--press-bg);
-  color: var(--text);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 26px;
-  font-weight: 600;
-  line-height: 1;
-
-  box-shadow:
-    0 8px 20px var(--shadow-soft),
-    inset 0 0 0 1px var(--border-soft);
-
-  cursor: pointer;
-  user-select: none;
-  z-index: 9999;
-}
-
-/* tap feedback */
-.add-fab:active {
-  transform: scale(0.95);
-}
 
 /* =========================
    STATUS CARD – COMPACT POLISH

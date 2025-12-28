@@ -33,6 +33,21 @@ function loadPageCSS(page) {
 }
 
 /* =================================================
+   GLOBAL PLUS VISIBILITY (LOCKED)
+   ================================================= */
+function updateGlobalAddVisibility(page) {
+  const addBtn = document.getElementById("globalAddBtn");
+  if (!addBtn) return;
+
+  // + hanya boleh muncul di page level list
+  const SHOW_ON = ["home", "notes"];
+
+  addBtn.style.display = SHOW_ON.includes(page)
+    ? "flex"
+    : "none";
+}
+
+/* =================================================
    APP ROUTER (SPA CORE – STABLE)
    ================================================= */
 window.loadPage = function (page, fromPop = false) {
@@ -66,6 +81,9 @@ window.loadPage = function (page, fromPop = false) {
       window.dispatchEvent(new Event("page:leave"));
 
       app.innerHTML = html;
+
+      // 🔒 KUNCI VISIBILITAS GLOBAL +
+      updateGlobalAddVisibility(page);
 
       // tunggu CSS + layout stabil (anti flicker)
       requestAnimationFrame(() => {
@@ -104,6 +122,7 @@ window.loadPage = function (page, fromPop = false) {
       app.classList.add("ready");
     });
 };
+
 /* =================================================
    DEFAULT PAGE (FIRST LOAD)
    ================================================= */

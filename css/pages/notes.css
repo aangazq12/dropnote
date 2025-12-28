@@ -1,79 +1,122 @@
 /* =========================
-   NOTES PAGE – DROPNOTE STYLE
+   NOTES PAGE – DROPNOTE v2
+   CALM • EDITORIAL • PRODUCT
    ========================= */
 
 .notes-page {
-  padding-bottom: 16px;
+  padding-bottom: 20px;
 }
 
 /* =========================
-   HEADER
+   HEADER (EDITORIAL)
    ========================= */
 .notes-page .notes-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+  margin-bottom: 6px;
 }
 
-/* =========================
-   SEARCH
-   ========================= */
-.notes-page .notes-search {
-  width: 100%;
-  padding: 12px 14px;
-  border-radius: 14px;
-  border: 1px solid var(--border-soft);
-  background: var(--bg);
+.notes-page .notes-header h1 {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: .3px;
   color: var(--text);
-  font-size: 14px;
-  margin: 12px 0 16px;
+}
+
+/* accent underline (OPSI 2) */
+.notes-page .notes-header h1::after {
+  content: "";
+  display: block;
+  width: 28px;
+  height: 4px;
+  margin-top: 6px;
+  border-radius: 999px;
+  background: var(--text);
+  opacity: .15;
 }
 
 /* =========================
-   FILTER
+   FILTER (SEGMENTED MODE)
    ========================= */
 .notes-page .status-filter {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+  display: inline-flex;
+  gap: 6px;
+  padding: 4px;
+  margin: 12px 0 14px;
+
+  background: var(--drawer-bg);
+  border-radius: 999px;
+  box-shadow: 0 2px 10px var(--shadow-soft);
 }
 
 .notes-page .status-filter button {
-  flex: 1;
-  padding: 8px 0;
+  flex: none;
+  padding: 6px 14px;
   border-radius: 999px;
-  border: 1px solid var(--border-soft);
-  background: var(--drawer-bg);
-  font-size: 12px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 12.5px;
+  font-weight: 500;
   color: var(--text-muted);
+
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
 }
 
 .notes-page .status-filter button.active {
   background: var(--text);
   color: var(--bg);
-  border-color: var(--text);
 }
 
 /* =========================
-   NOTE CARD
+   SEARCH (SOFT TOOL)
+   ========================= */
+.notes-page .notes-search {
+  width: 100%;
+  padding: 12px 16px;
+  margin: 6px 0 18px;
+
+  border-radius: 16px;
+  border: none;
+
+  background: var(--drawer-bg);
+  color: var(--text);
+
+  font-size: 14px;
+
+  box-shadow: 0 2px 10px var(--shadow-soft);
+}
+
+/* =========================
+   NOTES LIST
+   ========================= */
+.notes-page .notes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* =========================
+   NOTE CARD (EDITORIAL)
    ========================= */
 .notes-page .note-card {
   background: var(--drawer-bg);
-  border-radius: 16px;
-  padding: 14px 16px;
-  margin-bottom: 12px;
+  border-radius: 18px;
+  padding: 16px 18px;
 
   box-shadow:
-    0 1px 0 rgba(0,0,0,.03),
-    0 8px 18px var(--shadow-soft);
+    0 2px 6px rgba(0,0,0,.04),
+    0 12px 28px var(--shadow-soft);
 
   border-left: 3px solid transparent;
-  transition: transform .12s ease;
+
+  transition:
+    transform .12s ease,
+    box-shadow .12s ease;
 }
 
 .notes-page .note-card:active {
-  transform: scale(.98);
+  transform: scale(.985);
 }
 
 /* =========================
@@ -87,8 +130,27 @@
 
 .notes-page .note-head h3 {
   margin: 0;
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
+  color: var(--text);
+}
+
+/* trash / delete affordance */
+.notes-page .note-head .delete-btn {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 8px;
+  cursor: pointer;
+
+  transition: background .12s ease, color .12s ease;
+}
+
+.notes-page .note-head .delete-btn:hover {
+  background: rgba(0,0,0,.06);
+  color: #dc2626;
 }
 
 /* =========================
@@ -108,27 +170,42 @@
 }
 
 .notes-page .note-meta {
-  margin-top: 8px;
-  font-size: 11px;
+  margin-top: 10px;
+  font-size: 11.5px;
   color: var(--text-muted);
 }
 
 /* =========================
-   STATES (SOFT)
+   STATES (SUBTLE & PREMIUM)
    ========================= */
 .notes-page .note-draft {
-  border-left-color: #cbd5e1;
+  border-left-color: #e5e7eb;
 }
 
 .notes-page .note-active {
-  border-left-color: #93c5fd;
+  border-left-color: #bfdbfe;
 }
 
 .notes-page .note-done {
-  border-left-color: #86efac;
-  opacity: .6;
+  border-left-color: #bbf7d0;
+  opacity: .55;
 }
 
 .notes-page .note-overdue {
-  border-left-color: #fca5a5;
+  border-left-color: #fecaca;
+}
+
+/* =========================
+   EMPTY STATE (POLISHED)
+   ========================= */
+.notes-page .notes-list:empty::after {
+  content: "Belum ada catatan.\A Tap + untuk mulai mencatat.";
+  white-space: pre-line;
+
+  display: block;
+  text-align: center;
+  margin-top: 48px;
+
+  font-size: 13.5px;
+  color: var(--text-muted);
 }

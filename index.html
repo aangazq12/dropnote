@@ -35,10 +35,20 @@
 
   <main id="app"></main>
 
-  <nav class="bottom-nav">
-    <button onclick="loadPage('home')">🏠</button>
-    <button onclick="loadPage('notes')">🗒️</button>
-  </nav>
+<nav class="bottom-nav">
+  <button class="nav-item" onclick="loadPage('home')">🏠</button>
+
+  <button
+  class="nav-item nav-primary"
+  id="globalAddBtn"
+  onclick="loadPage('editor')"
+  aria-label="Add note"
+>
+  ＋
+</button>
+
+  <button class="nav-item" onclick="loadPage('notes')">🗒️</button>
+</nav>
 <!-- PWA INSTALL BUTTON -->
 <button id="installBtn" class="install-btn is-hidden">
   ⬇️ Install App
