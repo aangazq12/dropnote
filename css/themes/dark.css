@@ -1,7 +1,7 @@
 /* =================================================
    DROPNOTE — DARK MODE
    Eye Comfort / Premium Calm
-   FINAL – LOCKED (v1.1)
+   FINAL – CLEAN & SYNCED
    ================================================= */
 
 [data-theme="dark"] {
@@ -9,20 +9,20 @@
   /* =========================
      CORE BACKGROUND
      ========================= */
-  --bg: #0f172a;                /* deep navy, not pure black */
+  --bg: #0f172a;
 
   /* =========================
      SURFACES
      ========================= */
-  --drawer-bg: #0b1224;         /* cards, drawer, surfaces */
-  --press-bg: rgba(255,255,255,.06); /* FAB, pressed states */
+  --drawer-bg: #0b1224;
+  --press-bg: rgba(255,255,255,.06);
 
   /* =========================
      TEXT
      ========================= */
-  --text: #e5e7eb;              /* primary text */
-  --text-muted: #94a3b8;        /* secondary text */
-  --link: #7aa2ff;              /* soft indigo (non-neon) */
+  --text: #e5e7eb;
+  --text-muted: #94a3b8;
+  --link: #7aa2ff;
 
   /* =========================
      BORDERS & SHADOWS
@@ -33,7 +33,7 @@
   /* =========================
      OVERLAY
      ========================= */
-  --overlay: rgba(8,12,28,.55); /* navy overlay (not pure black) */
+  --overlay: rgba(8,12,28,.55);
 
   /* =========================
      BOTTOM NAV
@@ -48,7 +48,16 @@
 }
 
 /* =================================================
-   HEADER – DARK MODE POLISH
+   BASE TEXT & BODY
+   ================================================= */
+
+[data-theme="dark"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* =================================================
+   HEADER – HOME
    ================================================= */
 
 [data-theme="dark"] .home-header {
@@ -81,14 +90,14 @@
 }
 
 /* =================================================
-   ICON BUTTONS (MENU / THEME)
+   ICON BUTTONS
    ================================================= */
 
 [data-theme="dark"] .menu-btn,
 [data-theme="dark"] .theme-btn {
-  background: rgba(255,255,255,.06);
+  background: var(--drawer-bg);
   box-shadow:
-    0 6px 16px rgba(0,0,0,.55),
+    0 8px 20px rgba(0,0,0,.6),
     inset 0 0 0 1px var(--border-soft);
 }
 
@@ -98,56 +107,14 @@
 }
 
 /* =================================================
-   DRAWER POLISH
+   DRAWER
    ================================================= */
 
-[data-theme="dark"] .drawer-header {
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,.02),
-    transparent
-  );
-}
-
-/* =================================================
-   CARD & CONTENT CONSISTENCY
-   ================================================= */
-
-[data-theme="dark"] .resume,
-[data-theme="dark"] .stat,
-[data-theme="dark"] .tag-pill {
+[data-theme="dark"] .drawer {
   background: var(--drawer-bg);
-}
-
-[data-theme="dark"] .resume-main {
-  color: #f3f4f6;
-}
-
-[data-theme="dark"] .resume-action {
-  background: rgba(255,255,255,.06);
-}
-
-/* =================================================
-   FAB & GLOBAL ACTIONS
-   ================================================= */
-
-[data-theme="dark"] .add-fab,
-[data-theme="dark"] .lfg-fab {
-  box-shadow:
-    0 8px 24px rgba(0,0,0,.6),
-    inset 0 0 0 1px var(--border-soft);
-}
-
-/* =================================================
-   DARK MODE – TEXT FIX (REQUIRED)
-   ================================================= */
-
-[data-theme="dark"] body {
-  background: var(--bg);
   color: var(--text);
 }
 
-[data-theme="dark"] .drawer,
 [data-theme="dark"] .drawer-title,
 [data-theme="dark"] .drawer-item {
   color: var(--text);
@@ -158,94 +125,108 @@
   color: var(--text-muted);
 }
 
+[data-theme="dark"] .drawer-header {
+  background: linear-gradient(
+    to bottom,
+    rgba(255,255,255,.02),
+    transparent
+  );
+}
+
 /* =================================================
-   LFG PAGE – DARK MODE POLISH
+   HOME — RESUME / STATS / TAGS
    ================================================= */
 
-/* container / card utama */
+[data-theme="dark"] .resume,
+[data-theme="dark"] .stat,
+[data-theme="dark"] .tag-pill {
+  background: var(--drawer-bg);
+  box-shadow:
+    0 14px 36px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+[data-theme="dark"] .resume-main {
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .resume-action {
+  background: var(--drawer-bg);
+  border: 1px solid var(--border-soft);
+  color: var(--link);
+}
+
+[data-theme="dark"] .resume-action:active {
+  background: var(--press-bg);
+}
+
+/* =================================================
+   LFG PAGE
+   ================================================= */
+
 [data-theme="dark"] .lfg-card,
 [data-theme="dark"] .lfg-panel,
 [data-theme="dark"] .lfg-item {
   background: var(--drawer-bg);
   color: var(--text);
   box-shadow:
-    0 14px 36px rgba(0,0,0,.7),
-    inset 0 0 0 1px var(--border-soft);
+    0 16px 40px rgba(0,0,0,.75),
+    inset 0 1px 0 rgba(255,255,255,.05);
 }
 
-/* header LFG (🔥 LFG + tag) */
 [data-theme="dark"] .lfg-header {
-  background: rgba(255,255,255,.06);
+  background: var(--drawer-bg);
   border-bottom: 1px solid var(--border-soft);
 }
 
-/* label kiri (EVM, SOL, twitter, dll) */
 [data-theme="dark"] .lfg-label {
   color: var(--text-muted);
 }
 
-/* value kanan (address, username, dll) */
 [data-theme="dark"] .lfg-value {
   color: var(--text);
 }
 
-/* row / field */
 [data-theme="dark"] .lfg-row,
 [data-theme="dark"] .lfg-field {
-  background: rgba(255,255,255,.05);
+  background: var(--drawer-bg);
   border: 1px solid var(--border-soft);
 }
 
-/* note / hint kecil */
+[data-theme="dark"] .lfg-row:active {
+  background: var(--press-bg);
+}
+
 [data-theme="dark"] .lfg-note,
 [data-theme="dark"] .lfg-hint {
   color: var(--text-muted);
 }
 
-/* tap feedback */
-[data-theme="dark"] .lfg-row:active {
-  background: rgba(255,255,255,.06);
-}
-
 /* =================================================
-   BOTTOM NAV – DARK MODE INTEGRATION (APPEND ONLY)
-   Matches Premium Calm Dark Theme
+   FAB & FLOATING ACTIONS
    ================================================= */
 
-[data-theme="dark"] .bottom-nav {
-  background: var(--nav-bg);
-
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-
-  border-top: 1px solid var(--border-soft);
-
+[data-theme="dark"] .add-fab,
+[data-theme="dark"] .lfg-fab {
+  background: var(--drawer-bg);
   box-shadow:
-    0 -10px 28px rgba(0,0,0,.65),
-    inset 0 1px 0 rgba(255,255,255,.04);
-}
-
-/* =================================================
-   PRIMARY ADD (+) — DARK HERO (APPEND ONLY)
-   ================================================= */
-
-[data-theme="dark"] .bottom-nav .nav-primary {
-  background: linear-gradient(
-    180deg,
-    #0b1224,
-    #020617
-  );
-
-  color: var(--text);
-
-  box-shadow:
-    0 16px 36px rgba(0,0,0,.75),
+    0 12px 32px rgba(0,0,0,.75),
     inset 0 1px 0 rgba(255,255,255,.06);
 }
 
 /* =================================================
-   NAV ICONS — DARK CONSISTENCY (APPEND ONLY)
+   BOTTOM NAV
    ================================================= */
+
+[data-theme="dark"] .bottom-nav {
+  background: var(--nav-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-soft);
+  box-shadow:
+    0 -12px 30px rgba(0,0,0,.7),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
 
 [data-theme="dark"] .bottom-nav .nav-item {
   color: var(--nav-text);
@@ -253,4 +234,16 @@
 
 [data-theme="dark"] .bottom-nav .nav-item.active {
   color: var(--nav-text-active);
+}
+
+[data-theme="dark"] .bottom-nav .nav-primary {
+  background: linear-gradient(
+    180deg,
+    #0b1224,
+    #020617
+  );
+  color: var(--text);
+  box-shadow:
+    0 18px 44px rgba(0,0,0,.8),
+    inset 0 1px 0 rgba(255,255,255,.06);
 }
