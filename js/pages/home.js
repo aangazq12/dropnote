@@ -51,11 +51,12 @@ if (themeBtn && window.toggleTheme) {
   };
 
   function initHome() {
-    // PRESET STATE (ONE-TIME, SAFE)
-  maybeInjectPreset?.();
-    const notes = getNotes();
-    if (!Array.isArray(notes)) return;
+// PRESET STATE (ONE-TIME, SAFE)
+if (typeof window.maybeInjectPreset === "function") {
+  window.maybeInjectPreset();
+}
 
+const notes = getNotes?.() || [];
     /* ===============================
        COUNTS
        =============================== */
