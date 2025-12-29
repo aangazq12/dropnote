@@ -127,6 +127,36 @@ if (themeBtn && window.toggleTheme) {
       lastActivity.classList.add("is-hidden");
     }
 
+/* ===============================
+   SIGNAL STRIP (WALLET EVENTS)
+   =============================== */
+const signalStrip = document.getElementById("signalStrip");
+
+if (signalStrip && window.getWalletEvents) {
+  const { total, unreviewed } = getWalletEvents();
+
+  if (total > 0) {
+    const textEl = signalStrip.querySelector(".signal-text");
+    const actionEl = signalStrip.querySelector(".signal-action");
+
+    let text = `🔔 ${total} wallet event${total > 1 ? "s" : ""}`;
+    if (unreviewed > 0) {
+      text += ` · ${unreviewed} needs review`;
+    }
+
+    if (textEl) textEl.textContent = text;
+    if (actionEl) actionEl.textContent = "Review →";
+
+    signalStrip.classList.remove("is-hidden");
+
+    signalStrip.onclick = () => {
+      loadPage("audit"); // placeholder (Phase C)
+    };
+  } else {
+    signalStrip.classList.add("is-hidden");
+  }
+}
+
     /* ===============================
        TAG SUMMARY (FINAL)
        =============================== */
@@ -188,7 +218,8 @@ if (themeBtn && window.toggleTheme) {
   }
 
   window.addEventListener("notes:updated", initHome);
-  waitDom();
+window.addEventListener("wallet:updated", initHome);
+waitDom();
 
 })();
 

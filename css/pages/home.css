@@ -255,3 +255,39 @@
   font-size: 12px;                  /* lebih tenang */
   letter-spacing: .2px;
 }
+
+/* =========================
+   SIGNAL STRIP (HOME NOTIFICATION)
+   ========================= */
+
+.signal-strip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin: 12px 0 20px;
+  padding: 10px 14px;
+
+  background: var(--drawer-bg);
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+
+  box-shadow: 0 4px 14px var(--shadow-soft);
+
+  font-size: 13px;
+  color: var(--text);
+}
+
+.signal-text {
+  white-space: nowrap;
+}
+
+.signal-action {
+  font-weight: 500;
+  color: var(--link);
+  white-space: nowrap;
+}
+
+.signal-strip:active {
+  transform: scale(.99);
+}

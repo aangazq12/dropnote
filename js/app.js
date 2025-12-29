@@ -15,6 +15,7 @@ function loadPageCSS(page) {
     settings: "css/pages/settings.css",
     lfg: "css/pages/lfg.css",
     about: "css/pages/about.css",
+    audit: "css/pages/audit.css",
   };
 
   const href = map[page];
@@ -107,6 +108,7 @@ window.loadPage = function (page, fromPop = false) {
       if (page === "settings") scriptSrc = "js/pages/settings.js";
       if (page === "lfg") scriptSrc = "js/pages/lfg.js";
       if (page === "about") scriptSrc = "js/pages/about.js";
+      if (page === "audit") scriptSrc = "js/pages/audit.js";
 
       if (scriptSrc) {
         const script = document.createElement("script");

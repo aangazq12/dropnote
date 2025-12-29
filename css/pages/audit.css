@@ -1,0 +1,36 @@
+.audit-page {
+  padding-bottom: 120px;
+}
+
+.audit-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.audit-item {
+  background: var(--drawer-bg);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: 0 4px 14px var(--shadow-soft);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.audit-item.unreviewed {
+  outline: 2px solid var(--link);
+}
+
+.audit-main small {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.audit-action {
+  border: none;
+  background: var(--press-bg);
+  color: var(--link);
+  padding: 6px 12px;
+  border-radius: 999px;
+}
