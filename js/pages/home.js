@@ -128,33 +128,41 @@ const notes = getNotes?.() || [];
 
 /* ===============================
    SIGNAL STRIP (WALLET EVENTS)
+   FINAL – LOCKED
    =============================== */
 const signalStrip = document.getElementById("signalStrip");
 
-if (signalStrip && window.getWalletEvents) {
+function renderSignalStrip() {
+  if (!signalStrip || !window.getWalletEvents) return;
+
   const { total, unreviewed } = getWalletEvents();
 
-  if (total > 0) {
-    const textEl = signalStrip.querySelector(".signal-text");
-    const actionEl = signalStrip.querySelector(".signal-action");
-
-    let text = `🔔 ${total} wallet event${total > 1 ? "s" : ""}`;
-    if (unreviewed > 0) {
-      text += ` · ${unreviewed} needs review`;
-    }
-
-    if (textEl) textEl.textContent = text;
-    if (actionEl) actionEl.textContent = "Review →";
-
-    signalStrip.classList.remove("is-hidden");
-
-    signalStrip.onclick = () => {
-      loadPage("audit"); // placeholder (Phase C)
-    };
-  } else {
+  // 🔕 Hide if nothing needs review
+  if (unreviewed === 0) {
     signalStrip.classList.add("is-hidden");
+    return;
   }
+
+  const textEl = signalStrip.querySelector(".signal-text");
+  const actionEl = signalStrip.querySelector(".signal-action");
+
+  let text = `🔔 ${unreviewed} wallet event${unreviewed > 1 ? "s" : ""} need review`;
+
+  if (textEl) textEl.textContent = text;
+  if (actionEl) actionEl.textContent = "Review →";
+
+  signalStrip.classList.remove("is-hidden");
+
+  signalStrip.onclick = () => {
+    loadPage("audit");
+  };
 }
+
+// initial render
+renderSignalStrip();
+
+// reactive update
+window.addEventListener("wallet:updated", renderSignalStrip);
 
     /* ===============================
        TAG SUMMARY (FINAL)
