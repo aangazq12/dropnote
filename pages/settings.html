@@ -87,31 +87,36 @@
       </div>
     </section>
 
-    <!-- =========================
-         DATA & BACKUP (STEP F)
-         ========================= -->
-    <section class="settings-section">
-      <h2>Data & Backup</h2>
+<!-- =========================
+     BACKUP
+     ========================= -->
+<section class="settings-section">
+  <h2>Backup</h2>
 
-      <div class="setting-item">
-        <button id="exportDataBtn">Export Data</button>
-      </div>
+  <p class="settings-note">
+    Save a snapshot of your notes as a backup file.
+  </p>
 
-      <div class="setting-item">
-        <label for="importDataInput">Import Data</label>
-        <input
-          type="file"
-          id="importDataInput"
-          accept="application/json"
-        />
-      </div>
+  <div class="setting-item">
+    <button id="backupBtn">Backup</button>
+    <button id="backupAsBtn">Backup As…</button>
+  </div>
 
-      <div class="setting-item danger">
-        <button id="resetDataBtn">Reset All Data</button>
-      </div>
+  <div class="setting-item">
+    <label for="importDataInput">Restore from backup</label>
+    <input
+      type="file"
+      id="importDataInput"
+      accept="application/json"
+    />
+  </div>
 
-      <p class="settings-note" id="storageInfo"></p>
-    </section>
+  <div class="setting-item danger">
+    <button id="resetDataBtn">Reset All Data</button>
+  </div>
+
+  <p class="settings-note" id="storageInfo"></p>
+</section>
 
     <!-- =========================
          ABOUT
