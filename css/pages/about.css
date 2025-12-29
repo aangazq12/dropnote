@@ -1,40 +1,118 @@
+/* ===============================
+   ABOUT — GUIDE STYLE
+   DropNote v1.1.x
+   =============================== */
+
+/* PAGE */
 .about-page {
-  padding-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
 }
 
+/* HEADER */
+.about-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.about-header h1 {
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+/* ===============================
+   ACCORDION CONTAINER
+   =============================== */
+.about-accordion {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ===============================
+   DETAILS (SECTION)
+   =============================== */
 .about-accordion details {
-  border-bottom: 1px solid rgba(0,0,0,0.08);
-  padding: 8px 0;
+  background: var(--drawer-bg, #fff);
+  border-radius: 14px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.04);
 }
 
+/* ===============================
+   SUMMARY (TITLE)
+   =============================== */
 .about-accordion summary {
-  cursor: pointer;
-  font-weight: 500;
   list-style: none;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .about-accordion summary::-webkit-details-marker {
   display: none;
 }
 
+/* subtle arrow */
+.about-accordion summary::after {
+  content: "›";
+  float: right;
+  transform: rotate(90deg);
+  opacity: 0.4;
+  transition: transform 0.2s ease;
+}
+
+.about-accordion details[open] summary::after {
+  transform: rotate(-90deg);
+}
+
+/* ===============================
+   CONTENT
+   =============================== */
 .accordion-body {
-  padding: 10px 0 16px;
+  margin-top: 12px;
   font-size: 14px;
   line-height: 1.6;
+  color: var(--text);
 }
 
-.accordion-body ul {
+/* LIST */
+.accordion-body ul,
+.accordion-body ol {
   padding-left: 18px;
+  margin: 8px 0;
 }
 
+.accordion-body li {
+  margin-bottom: 6px;
+  color: var(--text-muted);
+}
+
+/* CODE BLOCK */
 .accordion-body pre {
-  background: rgba(0,0,0,0.05);
-  padding: 10px;
-  border-radius: 8px;
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 13px;
   overflow-x: auto;
+  margin: 10px 0;
 }
 
-.muted {
-  opacity: 0.7;
-  font-size: 13px;
+/* MUTED NOTE */
+.accordion-body .muted {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 10px;
+}
+
+/* ===============================
+   DARK MODE TWEAK
+   =============================== */
+[data-theme="dark"] .about-accordion details {
+  box-shadow: 0 4px 18px rgba(0,0,0,0.4);
 }

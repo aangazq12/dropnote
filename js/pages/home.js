@@ -51,10 +51,6 @@ if (themeBtn && window.toggleTheme) {
   };
 
   function initHome() {
-// PRESET STATE (ONE-TIME, SAFE)
-if (typeof window.maybeInjectPreset === "function") {
-  window.maybeInjectPreset();
-}
 
 const notes = getNotes?.() || [];
     /* ===============================

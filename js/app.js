@@ -126,6 +126,13 @@ window.loadPage = function (page, fromPop = false) {
 };
 
 /* =================================================
+   PRESET BOOTSTRAP (ONE TIME ONLY)
+   ================================================= */
+if (typeof window.maybeInjectPreset === "function") {
+  window.maybeInjectPreset();
+}
+
+/* =================================================
    DEFAULT PAGE (FIRST LOAD)
    ================================================= */
 window.addEventListener("load", () => {

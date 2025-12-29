@@ -1,114 +1,146 @@
-
 <section class="about-page page">
 
   <!-- HEADER -->
-  <header class="about-header header">
-    <button class="menu-btn icon">☰</button>
-    <h1>About</h1>
-    <span class="header-spacer"></span>
-  </header>
+<header class="about-header header">
+  <h1>About</h1>
+</header>
 
-  <!-- ACCORDION -->
+  <!-- GUIDE ACCORDION -->
   <section class="about-accordion">
 
-    <!-- OVERVIEW (OPEN BY DEFAULT) -->
+    <!-- OVERVIEW -->
     <details open>
-      <summary>Overview</summary>
+      <summary>What is DropNote?</summary>
       <div class="accordion-body">
-        <p><strong>DropNote v1.0</strong></p>
         <p>
-          Local-first note system<br>
-          with structured labels and LFG mode.
+          <strong>DropNote</strong> adalah sistem catatan lokal
+          untuk airdrop hunter dan Web3 task.
+        </p>
+        <p>
+          Semua data disimpan di perangkat kamu.
+          Tidak perlu akun. Tidak ada sync paksa.
         </p>
       </div>
     </details>
 
-    <!-- EDITOR -->
+    <!-- PRESET -->
     <details>
-      <summary>Editor: Save behavior</summary>
+      <summary>Why do I see example notes?</summary>
+      <div class="accordion-body">
+        <p>
+          Saat pertama kali digunakan, DropNote menampilkan
+          <strong>example notes</strong> sebagai panduan.
+        </p>
+        <p>
+          Contoh ini hanya muncul sekali dan
+          <strong>aman untuk dihapus</strong>.
+        </p>
+      </div>
+    </details>
+
+    <!-- NOTES -->
+    <details>
+      <summary>How notes work</summary>
       <div class="accordion-body">
         <ul>
-          <li>Judul wajib diisi</li>
-          <li>Tag dirapikan otomatis</li>
+          <li>Judul digunakan sebagai identitas catatan</li>
           <li>Konten disimpan apa adanya</li>
-          <li>Label duplikat digabung</li>
+          <li>Tidak ada auto-format atau auto-correct</li>
         </ul>
-
-        <p><strong>Editor tidak akan:</strong></p>
-        <ul>
-          <li>Auto format</li>
-          <li>Auto translate</li>
-          <li>Auto correct</li>
-        </ul>
+        <p class="muted">
+          DropNote tidak mencoba “memperbaiki” catatan kamu.
+        </p>
       </div>
     </details>
 
     <!-- TAGS -->
     <details>
-      <summary>Tags: Home visibility</summary>
+      <summary>About tags</summary>
       <div class="accordion-body">
-        <pre><code>tag1, tag2
-tag3 / tag4
-tag5</code></pre>
-
-        <ul>
-          <li>Tidak case-sensitive</li>
-          <li>Simbol dibersihkan</li>
-          <li>Spasi dirapikan</li>
-        </ul>
-
-        <p class="muted">
-          Home hanya menampilkan tag penting (by design).
+        <p>
+          Tag digunakan untuk mengelompokkan catatan seperti
+          <strong>Airdrop</strong>, <strong>Testnet</strong>,
+          atau <strong>Daily Task</strong>.
+        </p>
+        <p>
+          Home hanya menampilkan tag yang relevan
+          sebagai ringkasan aktivitas.
         </p>
       </div>
     </details>
 
     <!-- LFG -->
     <details>
-      <summary>LFG: Wallet & label rules</summary>
+      <summary>What is LFG note?</summary>
       <div class="accordion-body">
-        <pre><code>wallet 0xabc...
-w 0x123...
-address 0x999...</code></pre>
-
+        <p>
+          LFG adalah catatan cepat untuk
+          <strong>FCFS, whitelist, atau info sensitif</strong>.
+        </p>
+        <p>
+          Biasanya berisi:
+        </p>
         <ul>
-          <li>Semua keyword dianggap wallet</li>
-          <li>Hanya satu wallet ditampilkan</li>
-          <li>Duplikat diabaikan</li>
+          <li>Wallet (EVM / SOL)</li>
+          <li>Social ID (Twitter, dsb)</li>
         </ul>
-
-        <pre><code>wallet, w, address, addr
-→ wallet</code></pre>
+        <p class="muted">
+          Tag <strong>FCFS</strong> hanya muncul di LFG
+          dan tidak ditampilkan di Home.
+        </p>
       </div>
     </details>
+        <!-- Wallet notifications-->
+<details>
+  <summary>Wallet notifications (Telegram)</summary>
+  <div class="accordion-body">
+    <p>
+      DropNote dapat menampilkan notifikasi aktivitas wallet
+      melalui Telegram.
+    </p>
 
+    <p><strong>Cara kerja:</strong></p>
+    <ul>
+      <li>Buat channel Telegram (private / public)</li>
+      <li>Tambahkan DropNote bot ke channel</li>
+      <li>Tambahkan bot pemberi sinyal (misalnya Etherdrop)</li>
+    </ul>
+
+    <p><strong>Catatan penting:</strong></p>
+    <ul>
+      <li>DropNote tidak memantau wallet secara langsung</li>
+      <li>Semua event berasal dari pesan Telegram</li>
+      <li>Tidak ada signing atau eksekusi transaksi</li>
+      <li>Hanya notifikasi (read-only)</li>
+    </ul>
+
+    <p class="muted">
+      Wallet notification adalah sinyal, bukan aksi.
+    </p>
+  </div>
+</details>
     <!-- SETTINGS -->
     <details>
-      <summary>Settings: What they affect</summary>
+      <summary>Settings behavior</summary>
       <div class="accordion-body">
-        <p><strong>Affects:</strong></p>
-        <ul>
-          <li>Appearance</li>
-          <li>Behavior</li>
-          <li>LFG defaults</li>
-        </ul>
-
-        <p><strong>Does not affect:</strong></p>
-        <ul>
-          <li>Existing notes</li>
-          <li>Stored content</li>
-        </ul>
+        <p>
+          Settings memengaruhi tampilan dan perilaku aplikasi.
+        </p>
+        <p>
+          Perubahan settings
+          <strong>tidak mengubah catatan lama</strong>.
+        </p>
       </div>
     </details>
 
     <!-- DATA -->
     <details>
-      <summary>Data & privacy</summary>
+      <summary>Your data</summary>
       <div class="accordion-body">
         <ul>
           <li>Semua data disimpan lokal</li>
           <li>Tidak perlu akun</li>
-          <li>Tidak ada server / cloud</li>
+          <li>Tidak ada server atau cloud</li>
           <li>Backup manual via export</li>
         </ul>
       </div>

@@ -1,10 +1,10 @@
 /* ===============================
-   PRESET STATE — SHADOW ONLY
-   DropNote v1.1.x (FINAL)
+   PRESET STATE — ONE TIME ONLY
+   DropNote v1.1.x (FINAL FIX)
    =============================== */
 
 /* ===============================
-   PRESET DATA (EXAMPLE NOTES)
+   PRESET DATA
    =============================== */
 
 const PRESET_NOTES = [
@@ -15,7 +15,8 @@ const PRESET_NOTES = [
     content: `W EVM : 0x80F....A45195803
 W SOL : FyTEFiVqy6.....sEaAn2dNuY
 
-@ Twitter : Tuyul1`,
+@ Twitter : Tuyul1
+UID Binance : 123456`,
     status: "Draft"
   },
   {
@@ -45,8 +46,6 @@ W SOL : FyTEFiVqy6.....sEaAn2dNuY
    =============================== */
 
 function injectPresetNotes() {
-  if (!Array.isArray(PRESET_NOTES)) return;
-
   const now = Date.now();
 
   const notes = PRESET_NOTES.map((n, i) => ({
@@ -66,29 +65,34 @@ function injectPresetNotes() {
 }
 
 /* ===============================
-   GATE LOGIC (ONE-TIME, SAFE)
+   GATE LOGIC (HARD LOCK)
    =============================== */
 
 function maybeInjectPreset() {
-  const notes = window.getNotes?.() || [];
   const settings = window.getSettings?.() || {};
 
-  // already has notes → never inject
-  if (notes.length !== 0) return;
+  // 🔒 SUDAH PERNAH INJECT → STOP SELAMANYA
+  if (settings?.editor?.presetInjected === true) {
+    return;
+  }
 
-  // explicitly disabled
-  if (settings?.editor?.presetState === false) return;
+  const notes = window.getNotes?.() || [];
 
-  injectPresetNotes();
+  // inject hanya jika benar-benar kosong
+  if (notes.length === 0) {
+    injectPresetNotes();
+  }
 
-  // lock state so it never re-injects
+  // 🔒 KUNCI PERMANEN
   window.updateSettings?.({
-    editor: { presetState: true }
+    editor: {
+      presetInjected: true
+    }
   });
 }
 
 /* ===============================
-   EXPORT (GLOBAL — REQUIRED)
+   EXPORT GLOBAL
    =============================== */
 
 window.maybeInjectPreset = maybeInjectPreset;
