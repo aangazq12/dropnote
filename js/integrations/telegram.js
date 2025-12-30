@@ -1,5 +1,6 @@
 /* ===============================
    TELEGRAM ADAPTER – Step C
+   FINAL (ISOLATED)
    =============================== */
 
 const TELEGRAM_WORKER_URL =
@@ -34,10 +35,13 @@ function parseTelegramMessage(text = "", updateId) {
 }
 
 /* ===============================
-   MAIN SYNC
+   MAIN SYNC (WITH GUARD)
    =============================== */
 async function syncTelegramToWallet() {
-  if (!window.addWalletEvents) return;
+  if (
+    !window.addWalletEvents ||
+    !window.getWalletScope
+  ) return;
 
   try {
     const res = await fetch(TELEGRAM_WORKER_URL);
@@ -45,14 +49,30 @@ async function syncTelegramToWallet() {
 
     if (!Array.isArray(data.result)) return;
 
+    const scope = window.getWalletScope() || [];
+
+    // 🔒 FINAL GUARD
+    // Belum set wallet → jangan sync apa pun
+    if (!scope.length) return;
+
     const events = [];
 
     data.result.forEach(update => {
       const text = update?.channel_post?.text;
       if (!text) return;
 
-      const parsed = parseTelegramMessage(text, update.update_id);
-      if (parsed) events.push(parsed);
+      const parsed = parseTelegramMessage(
+        text,
+        update.update_id
+      );
+      if (!parsed) return;
+
+      // 🔒 WALLET ISOLATION
+      if (!scope.includes(parsed.wallet.toLowerCase())) {
+        return;
+      }
+
+      events.push(parsed);
     });
 
     if (events.length) {
@@ -64,11 +84,7 @@ async function syncTelegramToWallet() {
 }
 
 /* ===============================
-   EXPOSE FOR DEBUG
+   EXPOSE + AUTO RUN
    =============================== */
 window.syncTelegramToWallet = syncTelegramToWallet;
-
-/* ===============================
-   AUTO RUN (SAFE)
-   =============================== */
 syncTelegramToWallet();

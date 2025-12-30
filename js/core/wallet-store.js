@@ -153,3 +153,53 @@ window.removeWalletLabel = function (address) {
   delete map[address.toLowerCase()];
   saveWalletLabels(map);
 };
+
+/* ===============================
+   WALLET SCOPE (USER ISOLATION)
+   =============================== */
+
+const WALLET_SCOPE_KEY = "dropnote_wallet_scope";
+
+function loadWalletScope() {
+  try {
+    return JSON.parse(localStorage.getItem(WALLET_SCOPE_KEY)) || [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Get active wallet scope (lowercase addresses)
+ */
+window.getWalletScope = function () {
+  return loadWalletScope();
+};
+
+/**
+ * Replace wallet scope (array of addresses)
+ */
+window.setWalletScope = function (wallets = []) {
+  if (!Array.isArray(wallets)) return;
+  const normalized = wallets.map(w => w.toLowerCase());
+  localStorage.setItem(WALLET_SCOPE_KEY, JSON.stringify(normalized));
+};
+
+/**
+ * Add single wallet to scope
+ */
+window.addWalletToScope = function (address) {
+  if (!address) return;
+  const list = loadWalletScope();
+  const lower = address.toLowerCase();
+  if (!list.includes(lower)) {
+    list.push(lower);
+    localStorage.setItem(WALLET_SCOPE_KEY, JSON.stringify(list));
+  }
+};
+
+/**
+ * Clear wallet scope (DEV / reset)
+ */
+window.clearWalletScope = function () {
+  localStorage.removeItem(WALLET_SCOPE_KEY);
+};

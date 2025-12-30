@@ -64,7 +64,31 @@
         />
       </div>
     </section>
+<!-- =========================
+     WALLET (TELEGRAM / EVENTS)
+     ========================= -->
+<section class="settings-section">
+  <h2>Wallet Events</h2>
 
+  <p class="settings-note">
+    Only events from wallets below will appear in DropNote.
+  </p>
+
+  <div id="walletList" class="wallet-list"></div>
+
+  <div class="setting-item">
+    <input
+      id="walletInput"
+      type="text"
+      placeholder="Paste wallet address (0x… / Solana)"
+    />
+    <button id="addWalletBtn">Add</button>
+  </div>
+
+  <p class="settings-note subtle">
+    Telegram sync will start after at least one wallet is added.
+  </p>
+</section>
     <!-- =========================
          NOTES (STEP E)
          ========================= -->
