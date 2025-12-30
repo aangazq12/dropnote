@@ -1,5 +1,6 @@
 /* ===============================
-   SETTINGS PAGE — FINAL (SPA SAFE)
+   SETTINGS PAGE — FINAL (SINGLE BLOCK)
+   DropNote v1.1.x — SPA SAFE
    =============================== */
 
 (function () {
@@ -20,34 +21,28 @@
   // Backup
   let backupBtn, backupAsBtn, importDataInput, resetDataBtn, storageInfo;
 
+  // Wallet scope
+  let walletInput, walletScopeList;
+
   /* ===============================
      HELPERS
      =============================== */
+
+  function showToast(text) {
+    const t = document.createElement("div");
+    t.className = "toast";
+    t.textContent = text;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 1500);
+  }
 
   function buildBackupPayload() {
     const notes = getNotes?.() || [];
     const settings = getSettings?.() || {};
 
-    // context (sinkron dengan filename logic)
     let context = "default";
-
-    if (settings?.editor?.presetState === true) {
-      context = "preset";
-    } else if (settings?.editor?.defaultWallet) {
-      context = "wallet";
-    } else {
-      const tags = {};
-      notes.forEach(n => {
-        (n.tags || []).forEach(t => {
-          const k = String(t).toLowerCase();
-          tags[k] = (tags[k] || 0) + 1;
-        });
-      });
-
-      if (tags.airdrop) context = "airdrop";
-      else if (tags.testnet) context = "testnet";
-      else if (tags.retro) context = "retro";
-    }
+    if (settings?.editor?.presetState) context = "preset";
+    else if (settings?.editor?.defaultWallet) context = "wallet";
 
     return {
       meta: {
@@ -64,32 +59,6 @@
 
   function getDefaultBackupFilename() {
     const today = new Date().toISOString().slice(0, 10);
-    const settings = getSettings?.() || {};
-    const notes = getNotes?.() || [];
-
-    if (settings?.editor?.presetState === true) {
-      return `dropnote-backup-preset-${today}.json`;
-    }
-
-    if (settings?.editor?.defaultWallet) {
-      return `dropnote-backup-wallet-${today}.json`;
-    }
-
-    const tagCount = {};
-    notes.forEach(n => {
-      (n.tags || []).forEach(t => {
-        const k = String(t).toLowerCase();
-        tagCount[k] = (tagCount[k] || 0) + 1;
-      });
-    });
-
-    const priorityTags = ["airdrop", "testnet", "retro"];
-    for (const tag of priorityTags) {
-      if (tagCount[tag]) {
-        return `dropnote-backup-${tag}-${today}.json`;
-      }
-    }
-
     return `dropnote-backup-${today}.json`;
   }
 
@@ -98,20 +67,11 @@
       [JSON.stringify(payload, null, 2)],
       { type: "application/json" }
     );
-
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
-  }
-
-  function showToast(text) {
-    const t = document.createElement("div");
-    t.className = "toast";
-    t.textContent = text;
-    document.body.appendChild(t);
-    setTimeout(() => t.remove(), 1500);
   }
 
   /* ===============================
@@ -137,6 +97,71 @@
       storageInfo.textContent =
         `Local storage size: ${(size / 1024).toFixed(2)} KB`;
     }
+  }
+
+  /* ===============================
+     WALLET SCOPE UI
+     =============================== */
+
+  function renderWalletScope() {
+    if (!walletScopeList || !window.getWalletScope) return;
+
+    const scope = getWalletScope();
+    walletScopeList.innerHTML = "";
+
+    if (!scope.length) {
+      walletScopeList.innerHTML =
+        `<small class="text-muted">No wallets added</small>`;
+      return;
+    }
+
+    scope.forEach(addr => {
+      const row = document.createElement("div");
+      row.className = "wallet-scope-item";
+      row.innerHTML = `
+        <span>${addr}</span>
+        <button aria-label="Remove">✕</button>
+      `;
+
+      row.querySelector("button").onclick = () => {
+  const ok = confirm(
+    `Remove this wallet?\n\n${addr}\n\nWallet events from this address will no longer appear.`
+  );
+
+  if (!ok) return;
+
+  removeWalletFromScope(addr);
+  if (getWalletScope().length === 0) {
+  console.info("[wallet] scope empty, telegram sync paused");
+}
+  renderWalletScope();
+
+  // optional: feedback kecil
+  window.dispatchEvent(new Event("wallet:updated"));
+};
+
+      walletScopeList.appendChild(row);
+    });
+  }
+
+  function initWalletSettings() {
+    walletInput = document.getElementById("walletInput");
+    walletScopeList = document.getElementById("walletScopeList");
+    if (!walletInput || !walletScopeList) return;
+
+    renderWalletScope();
+
+    walletInput.addEventListener("change", () => {
+      const addr = walletInput.value.trim();
+      if (!addr) return;
+
+      addWalletToScope(addr);
+      walletInput.value = "";
+      renderWalletScope();
+
+      // 🔄 re-sync telegram after wallet added
+      window.syncTelegramToWallet?.();
+    });
   }
 
   /* ===============================
@@ -166,119 +191,55 @@
     storageInfo = document.getElementById("storageInfo");
 
     syncUI();
+    initWalletSettings();
 
-    /* ===============================
-       SETTINGS LISTENERS
-       =============================== */
+    /* ===== listeners ===== */
 
-    themeSelect?.addEventListener("change", e => {
-      updateSettings({ appearance: { theme: e.target.value } });
-    });
+    themeSelect?.addEventListener("change", e =>
+      updateSettings({ appearance: { theme: e.target.value } })
+    );
 
-    fontSelect?.addEventListener("change", e => {
-      updateSettings({ appearance: { fontSize: e.target.value } });
-    });
+    fontSelect?.addEventListener("change", e =>
+      updateSettings({ appearance: { fontSize: e.target.value } })
+    );
 
-    editorAutofocus?.addEventListener("change", e => {
-      updateSettings({ editor: { autofocus: e.target.checked } });
-    });
+    editorAutofocus?.addEventListener("change", e =>
+      updateSettings({ editor: { autofocus: e.target.checked } })
+    );
 
-    editorAutosave?.addEventListener("change", e => {
-      updateSettings({ editor: { autosave: e.target.checked } });
-    });
+    editorAutosave?.addEventListener("change", e =>
+      updateSettings({ editor: { autosave: e.target.checked } })
+    );
 
-    defaultWalletInput?.addEventListener("input", e => {
-      updateSettings({ editor: { defaultWallet: e.target.value } });
-    });
+    defaultWalletInput?.addEventListener("input", e =>
+      updateSettings({ editor: { defaultWallet: e.target.value } })
+    );
 
-    notesSortSelect?.addEventListener("change", e => {
-      updateSettings({ notes: { sort: e.target.value } });
-    });
+    notesSortSelect?.addEventListener("change", e =>
+      updateSettings({ notes: { sort: e.target.value } })
+    );
 
-    notesPreviewToggle?.addEventListener("change", e => {
-      updateSettings({ notes: { showPreview: e.target.checked } });
-    });
-
-    /* ===============================
-       BACKUP
-       =============================== */
+    notesPreviewToggle?.addEventListener("change", e =>
+      updateSettings({ notes: { showPreview: e.target.checked } })
+    );
 
     backupBtn?.addEventListener("click", () => {
-      const payload = buildBackupPayload();
-      const filename = getDefaultBackupFilename();
-      downloadBackup(payload, filename);
+      downloadBackup(buildBackupPayload(), getDefaultBackupFilename());
       showToast("Backup saved");
     });
 
     backupAsBtn?.addEventListener("click", () => {
-      const payload = buildBackupPayload();
-      const suggested = getDefaultBackupFilename();
-      const filename = prompt("Backup As", suggested);
-      if (!filename) return;
-
-      if (!filename.endsWith(".json")) {
-        showToast("Filename must end with .json");
-        return;
+      const name = prompt("Backup As", getDefaultBackupFilename());
+      if (name && name.endsWith(".json")) {
+        downloadBackup(buildBackupPayload(), name);
+        showToast("Backup exported");
       }
-
-      downloadBackup(payload, filename);
-      showToast("Backup exported");
     });
-
-    /* ===============================
-       RESTORE
-       =============================== */
-
-    importDataInput?.addEventListener("change", e => {
-      const file = e.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = () => {
-        try {
-          const data = JSON.parse(reader.result);
-          let restored = false;
-
-          if (Array.isArray(data.notes)) {
-            localStorage.setItem("dropnote_notes", JSON.stringify(data.notes));
-            restored = true;
-          }
-
-          if (data.settings && typeof data.settings === "object") {
-            localStorage.setItem("dropnote_settings", JSON.stringify(data.settings));
-            restored = true;
-          }
-
-          if (!restored) {
-            showToast("Nothing to restore");
-            importDataInput.value = "";
-            return;
-          }
-
-          showToast("Backup restored");
-          setTimeout(() => location.reload(), 800);
-
-        } catch {
-          showToast("Invalid backup file");
-          importDataInput.value = "";
-        }
-      };
-
-      reader.readAsText(file);
-    });
-
-    /* ===============================
-       RESET
-       =============================== */
 
     resetDataBtn?.addEventListener("click", () => {
-      if (!confirm("Reset all data? This cannot be undone.")) return;
-
-      localStorage.removeItem("dropnote_notes");
-      localStorage.removeItem("dropnote_settings");
-      localStorage.removeItem("dropnote_editor_draft");
+      if (!confirm("Reset all data?")) return;
+      localStorage.clear();
       sessionStorage.clear();
-
       showToast("All data cleared");
       setTimeout(() => location.reload(), 800);
     });

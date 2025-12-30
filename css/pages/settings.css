@@ -215,3 +215,34 @@
   -webkit-overflow-scrolling: touch;
   padding-bottom: 120px; /* aman dari bottom nav */
 }
+
+/* ===============================
+   wallet tele
+   =============================== */
+   .wallet-scope-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.wallet-scope-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 8px 10px;
+  border-radius: 10px;
+
+  background: var(--card-bg, var(--drawer-bg));
+  border: 1px solid var(--border-soft);
+
+  font-size: 13px;
+}
+
+.wallet-scope-item button {
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
