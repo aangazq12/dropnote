@@ -34,3 +34,21 @@
   padding: 6px 12px;
   border-radius: 999px;
 }
+
+/* ===============================
+   WALLET LABEL (CLICKABLE)
+   =============================== */
+
+.audit-wallet {
+  cursor: pointer;
+  color: var(--link);
+  user-select: none;
+}
+
+.audit-wallet:hover {
+  text-decoration: underline;
+}
+
+.audit-wallet:active {
+  opacity: 0.7;
+}

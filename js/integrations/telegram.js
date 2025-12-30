@@ -1,41 +1,89 @@
 /* ===============================
-   TELEGRAM ADAPTER – Step C
-   FINAL (ISOLATED)
+   TELEGRAM ADAPTER — FINAL
+   DropNote v1.1.x (LOCK SAFE)
    =============================== */
 
 const TELEGRAM_WORKER_URL =
   "https://telegram-proxy-dropnote.thelastaank.workers.dev";
 
 /* ===============================
-   PARSER
+   PARSER (ETHERDROP + LEGACY)
    =============================== */
 function parseTelegramMessage(text = "", updateId) {
-  const obj = {};
+  const lines = text
+    .split("\n")
+    .map(l => l.trim())
+    .filter(Boolean);
 
-  text.split("\n").forEach(line => {
-    const idx = line.indexOf(": ");
-    if (idx === -1) return;
+  let chain = "UNKNOWN";
+  let direction = null;
+  let amount = null;
+  let symbol = "";
+  let wallet = null;
 
-    const key = line.slice(0, idx).trim().toUpperCase();
-    const value = line.slice(idx + 2).trim();
-    obj[key] = value;
+  /* HEADER
+     Oxenks · BASE | ✏️
+  */
+  if (lines[0]?.includes("·")) {
+    const header = lines[0].split("|")[0];
+    const parts = header.split("·");
+    chain = parts[1]?.trim().toUpperCase() || chain;
+  }
+
+  lines.forEach(line => {
+    // Sent / Received
+    if (line.startsWith("Sent:") || line.startsWith("Received:")) {
+      direction = line.startsWith("Sent:")
+        ? "Sent"
+        : "Received";
+
+      const main = line.split(":")[1]?.trim();
+      if (main) {
+        const clean = main.split("(~")[0].trim();
+        const parts = clean.split(" ");
+        amount = parts[0];
+        symbol = parts.slice(1).join(" ");
+      }
+
+      if (line.includes(" To: ")) {
+        wallet = line.split(" To: ")[1]?.trim();
+      }
+      if (line.includes(" From: ")) {
+        wallet = line.split(" From: ")[1]?.trim();
+      }
+    }
+
+    // Legacy fallback
+    if (line.startsWith("From:") || line.startsWith("To:")) {
+      wallet = line.split(":")[1]?.trim();
+    }
   });
 
-  if (!obj.WALLET || !obj.AMOUNT) return null;
+  // 🚫 Guard wajib
+  if (!amount || !wallet) return null;
+
+  // 🚫 Hanya address valid
+  const isAddress =
+    wallet.startsWith("0x") ||
+    wallet.length > 30; // solana / long addr
+
+  if (!isAddress) {
+    console.info("[telegram] skipped non-address:", wallet);
+    return null;
+  }
 
   return {
     id: `tg-${updateId}`,
-    chain: obj.CHAIN || "UNKNOWN",
-    summary: `Received ${obj.AMOUNT} ${obj.SYMBOL || ""}`.trim(),
-    wallet: obj.WALLET,
-    tx: obj.TX || null,
+    chain,
+    summary: `${direction} ${amount} ${symbol}`.trim(),
+    wallet: wallet.toLowerCase(),
     source: "telegram",
     time: Date.now()
   };
 }
 
 /* ===============================
-   MAIN SYNC (WITH GUARD)
+   MAIN SYNC (WALLET GUARDED)
    =============================== */
 async function syncTelegramToWallet() {
   if (
@@ -52,8 +100,10 @@ async function syncTelegramToWallet() {
     const scope = window.getWalletScope() || [];
 
     // 🔒 FINAL GUARD
-    // Belum set wallet → jangan sync apa pun
-    if (!scope.length) return;
+    if (!scope.length) {
+      console.info("[wallet] scope empty, telegram sync paused");
+      return;
+    }
 
     const events = [];
 
@@ -68,9 +118,7 @@ async function syncTelegramToWallet() {
       if (!parsed) return;
 
       // 🔒 WALLET ISOLATION
-      if (!scope.includes(parsed.wallet.toLowerCase())) {
-        return;
-      }
+      if (!scope.includes(parsed.wallet)) return;
 
       events.push(parsed);
     });

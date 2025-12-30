@@ -99,71 +99,72 @@
     }
   }
 
-  /* ===============================
-     WALLET SCOPE UI
-     =============================== */
+/* ===============================
+   WALLET SCOPE UI — FINAL
+   =============================== */
 
-  function renderWalletScope() {
-    if (!walletScopeList || !window.getWalletScope) return;
+function renderWalletScope() {
+  if (!walletScopeList || !window.getWalletScope) return;
 
-    const scope = getWalletScope();
-    walletScopeList.innerHTML = "";
+  const scope = getWalletScope();
+  walletScopeList.innerHTML = "";
 
-    if (!scope.length) {
-      walletScopeList.innerHTML =
-        `<small class="text-muted">No wallets added</small>`;
-      return;
-    }
+  if (!scope.length) {
+    walletScopeList.innerHTML =
+      `<small class="text-muted">No wallets added</small>`;
+    return;
+  }
 
-    scope.forEach(addr => {
-      const row = document.createElement("div");
-      row.className = "wallet-scope-item";
-      row.innerHTML = `
-        <span>${addr}</span>
-        <button aria-label="Remove">✕</button>
-      `;
+  scope.forEach(addr => {
+    const row = document.createElement("div");
+    row.className = "wallet-scope-item";
 
-      row.querySelector("button").onclick = () => {
-  const ok = confirm(
-    `Remove this wallet?\n\n${addr}\n\nWallet events from this address will no longer appear.`
-  );
+    row.innerHTML = `
+      <span>${addr}</span>
+      <button aria-label="Remove">✕</button>
+    `;
 
-  if (!ok) return;
+    row.querySelector("button").onclick = () => {
+      const ok = confirm(
+        `Remove this wallet?\n\n${addr}\n\nAll related wallet events will be cleared.`
+      );
+      if (!ok) return;
 
-  removeWalletFromScope(addr);
-  if (getWalletScope().length === 0) {
-  console.info("[wallet] scope empty, telegram sync paused");
+      removeWalletFromScope(addr);
+
+      // 🧹 jika ini wallet terakhir → clear event & pause sync
+      if (getWalletScope().length === 0) {
+        clearWalletEvents?.();
+        console.info("[wallet] scope empty → events cleared & sync paused");
+      }
+
+      renderWalletScope();
+      window.dispatchEvent(new Event("wallet:updated"));
+    };
+
+    walletScopeList.appendChild(row);
+  });
 }
+
+function initWalletSettings() {
+  walletInput = document.getElementById("walletInput");
+  walletScopeList = document.getElementById("walletScopeList");
+  if (!walletInput || !walletScopeList) return;
+
   renderWalletScope();
 
-  // optional: feedback kecil
-  window.dispatchEvent(new Event("wallet:updated"));
-};
+  walletInput.addEventListener("change", () => {
+    const addr = walletInput.value.trim();
+    if (!addr) return;
 
-      walletScopeList.appendChild(row);
-    });
-  }
-
-  function initWalletSettings() {
-    walletInput = document.getElementById("walletInput");
-    walletScopeList = document.getElementById("walletScopeList");
-    if (!walletInput || !walletScopeList) return;
-
+    addWalletToScope(addr);
+    walletInput.value = "";
     renderWalletScope();
 
-    walletInput.addEventListener("change", () => {
-      const addr = walletInput.value.trim();
-      if (!addr) return;
-
-      addWalletToScope(addr);
-      walletInput.value = "";
-      renderWalletScope();
-
-      // 🔄 re-sync telegram after wallet added
-      window.syncTelegramToWallet?.();
-    });
-  }
-
+    // 🔄 re-sync telegram after wallet added
+    window.syncTelegramToWallet?.();
+  });
+}
   /* ===============================
      INIT
      =============================== */

@@ -128,14 +128,23 @@ const notes = getNotes?.() || [];
 
 /* ===============================
    SIGNAL STRIP (WALLET EVENTS)
-   FINAL – LOCKED
+   FINAL – LOCKED + WALLET GUARD
    =============================== */
 const signalStrip = document.getElementById("signalStrip");
 
 function renderSignalStrip() {
   if (!signalStrip || !window.getWalletEvents) return;
 
-  const { total, unreviewed } = getWalletEvents();
+  // 🔒 WALLET SCOPE GUARD
+  if (window.getWalletScope) {
+    const scope = getWalletScope();
+    if (!scope || scope.length === 0) {
+      signalStrip.classList.add("is-hidden");
+      return;
+    }
+  }
+
+  const { unreviewed } = getWalletEvents();
 
   // 🔕 Hide if nothing needs review
   if (unreviewed === 0) {
@@ -146,7 +155,7 @@ function renderSignalStrip() {
   const textEl = signalStrip.querySelector(".signal-text");
   const actionEl = signalStrip.querySelector(".signal-action");
 
-  let text = `🔔 ${unreviewed} wallet event${unreviewed > 1 ? "s" : ""} need review`;
+  const text = `🔔 ${unreviewed} wallet event${unreviewed > 1 ? "s" : ""} need review`;
 
   if (textEl) textEl.textContent = text;
   if (actionEl) actionEl.textContent = "Review →";
@@ -163,7 +172,6 @@ renderSignalStrip();
 
 // reactive update
 window.addEventListener("wallet:updated", renderSignalStrip);
-
     /* ===============================
        TAG SUMMARY (FINAL)
        =============================== */

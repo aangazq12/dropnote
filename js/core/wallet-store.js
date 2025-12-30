@@ -1,35 +1,39 @@
 /* ===============================
-   WALLET STORE – CORE STATE
-   DropNote v1.0
+   WALLET STORE — CORE STATE
+   DropNote v1.1 (LOCKED)
    =============================== */
 
-const STORAGE_KEY = "dropnote_wallet_events";
+/* ===============================
+   STORAGE KEYS
+   =============================== */
+const WALLET_EVENT_KEY = "dropnote_wallet_events";
+const WALLET_LABEL_KEY = "dropnote_wallet_labels";
 
 /* ===============================
    INTERNAL HELPERS
    =============================== */
-function loadEvents() {
+function loadJSON(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+    return JSON.parse(localStorage.getItem(key)) ?? fallback;
   } catch {
-    return [];
+    return fallback;
   }
 }
 
-function saveEvents(events) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(events));
+function saveJSON(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
 }
 
 /* ===============================
-   PUBLIC API
+   WALLET EVENTS
    =============================== */
 
 /**
  * Get wallet event summary + items
- * Used by: home.js, wallet page (later)
+ * Used by: home.js, audit.js
  */
 window.getWalletEvents = function () {
-  const items = loadEvents();
+  const items = loadJSON(WALLET_EVENT_KEY, []);
 
   const unreviewed = items.filter(e => !e.reviewed).length;
 
@@ -42,16 +46,16 @@ window.getWalletEvents = function () {
 
 /**
  * Add new wallet events
- * events: Array of event objects
+ * Deduplicated by event.id
  */
 window.addWalletEvents = function (events = []) {
-  if (!Array.isArray(events) || !events.length) return;
+  if (!Array.isArray(events) || events.length === 0) return;
 
-  const current = loadEvents();
+  const current = loadJSON(WALLET_EVENT_KEY, []);
   const map = new Map(current.map(e => [e.id, e]));
 
   events.forEach(event => {
-    if (!event.id) return;
+    if (!event?.id) return;
 
     map.set(event.id, {
       reviewed: false,
@@ -60,17 +64,17 @@ window.addWalletEvents = function (events = []) {
     });
   });
 
-  saveEvents(Array.from(map.values()));
-
-  // 🔔 notify app
+  saveJSON(WALLET_EVENT_KEY, Array.from(map.values()));
   window.dispatchEvent(new Event("wallet:updated"));
 };
 
 /**
- * Mark event as reviewed
+ * Mark single wallet event as reviewed
  */
 window.markWalletReviewed = function (id) {
-  const events = loadEvents();
+  if (!id) return;
+
+  const events = loadJSON(WALLET_EVENT_KEY, []);
   let changed = false;
 
   events.forEach(e => {
@@ -81,125 +85,55 @@ window.markWalletReviewed = function (id) {
   });
 
   if (changed) {
-    saveEvents(events);
+    saveJSON(WALLET_EVENT_KEY, events);
     window.dispatchEvent(new Event("wallet:updated"));
   }
 };
 
 /**
- * Clear all wallet events (debug / reset)
+ * Clear ALL wallet events
+ * Used when wallet scope becomes empty
  */
 window.clearWalletEvents = function () {
-  saveEvents([]);
+  saveJSON(WALLET_EVENT_KEY, []);
   window.dispatchEvent(new Event("wallet:updated"));
 };
 
 /* ===============================
-   DEV DUMMY (REMOVE LATER)
-   =============================== */
-// Uncomment for quick test
-/*
-addWalletEvents([
-  {
-    id: "dummy-1",
-    chain: "EVM",
-    summary: "Received 0.98 USDC",
-    wallet: "0x27..24a5",
-    tx: "0xabc",
-    time: Date.now()
-  }
-]);
-*/
-/* ===============================
-   WALLET LABEL MAP
+   WALLET LABELS (METADATA)
    =============================== */
 
-const WALLET_LABEL_KEY = "dropnote_wallet_labels";
-
-function loadWalletLabels() {
-  try {
-    return JSON.parse(localStorage.getItem(WALLET_LABEL_KEY)) || {};
-  } catch {
-    return {};
-  }
-}
-
-function saveWalletLabels(map) {
-  localStorage.setItem(WALLET_LABEL_KEY, JSON.stringify(map));
-}
-
-/* ===============================
-   PUBLIC WALLET LABEL API
-   =============================== */
-
-// get label by address
+/**
+ * Get label for wallet address
+ */
 window.getWalletLabel = function (address) {
   if (!address) return null;
-  const map = loadWalletLabels();
+  const map = loadJSON(WALLET_LABEL_KEY, {});
   return map[address.toLowerCase()] || null;
 };
 
-// set / update label
+/**
+ * Set / update wallet label
+ */
 window.setWalletLabel = function (address, label) {
   if (!address || !label) return;
-  const map = loadWalletLabels();
-  map[address.toLowerCase()] = label;
-  saveWalletLabels(map);
+
+  const map = loadJSON(WALLET_LABEL_KEY, {});
+  map[address.toLowerCase()] = label.trim();
+
+  saveJSON(WALLET_LABEL_KEY, map);
+  window.dispatchEvent(new Event("wallet:updated"));
 };
 
-// remove label
+/**
+ * Remove wallet label
+ */
 window.removeWalletLabel = function (address) {
-  const map = loadWalletLabels();
-  delete map[address.toLowerCase()];
-  saveWalletLabels(map);
-};
-
-/* ===============================
-   WALLET SCOPE (USER ISOLATION)
-   =============================== */
-
-const WALLET_SCOPE_KEY = "dropnote_wallet_scope";
-
-function loadWalletScope() {
-  try {
-    return JSON.parse(localStorage.getItem(WALLET_SCOPE_KEY)) || [];
-  } catch {
-    return [];
-  }
-}
-
-/**
- * Get active wallet scope (lowercase addresses)
- */
-window.getWalletScope = function () {
-  return loadWalletScope();
-};
-
-/**
- * Replace wallet scope (array of addresses)
- */
-window.setWalletScope = function (wallets = []) {
-  if (!Array.isArray(wallets)) return;
-  const normalized = wallets.map(w => w.toLowerCase());
-  localStorage.setItem(WALLET_SCOPE_KEY, JSON.stringify(normalized));
-};
-
-/**
- * Add single wallet to scope
- */
-window.addWalletToScope = function (address) {
   if (!address) return;
-  const list = loadWalletScope();
-  const lower = address.toLowerCase();
-  if (!list.includes(lower)) {
-    list.push(lower);
-    localStorage.setItem(WALLET_SCOPE_KEY, JSON.stringify(list));
-  }
-};
 
-/**
- * Clear wallet scope (DEV / reset)
- */
-window.clearWalletScope = function () {
-  localStorage.removeItem(WALLET_SCOPE_KEY);
+  const map = loadJSON(WALLET_LABEL_KEY, {});
+  delete map[address.toLowerCase()];
+
+  saveJSON(WALLET_LABEL_KEY, map);
+  window.dispatchEvent(new Event("wallet:updated"));
 };
